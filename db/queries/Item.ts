@@ -11,6 +11,12 @@ export async function selectItemByUrl(db: Database, url: string): Promise<Item|n
   return items.length === 1 ? items[0] : null
 }
 
+export async function selectItemById(db: Database, id: number): Promise<Item|null> {
+  const items = await db.getClient().query('SELECT * FROM items WHERE id = ? LIMIT 1', [id])
+
+  return items.length === 1 ? items[0] : null
+}
+
 export async function updateAllItemsIsActive(db: Database, isActive: boolean): Promise<void> {
   await db.getClient().query('UPDATE items SET is_active = ?', [isActive ? 1 : 0])
 }
