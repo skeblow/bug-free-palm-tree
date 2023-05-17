@@ -1,8 +1,6 @@
 import { Head } from "$fresh/runtime.ts"
 import Counter from "../islands/Counter.tsx"
 import { Handlers, PageProps } from "$fresh/server.ts"
-import { DOMParser } from "DOMParser"
-import { Client } from "client"
 import { Fragment } from "preact"
 import { Menu } from "../components/Menu.tsx"
 import { Database } from "../db/Database.ts"

@@ -3,24 +3,42 @@ import { Head } from "$fresh/runtime.ts"
 import { Menu } from "../components/Menu.tsx"
 import { Item } from "../components/model/Item.ts"
 import { Database } from "../db/Database.ts"
-import { fetchBazos } from "../service/Bazos.ts"
-import { insertItem } from "../db/queries/Item.ts"
+import { fetchAllBazos, fetchOneBazos } from "../service/Bazos.ts"
+import { insertItem, selectItemByUrl, updateItem } from "../db/queries/Item.ts"
 
 export const handler: Handlers<Array<Item>> = {
   async GET(_, ctx) {
     const db = await new Database().init()
+    const items = await fetchAllBazos()
+    const allItems: Array<Item> = []
 
-    const items = await fetchBazos()
+    for (let item of items) {
+      const found = await selectItemByUrl(db, item.url)
 
-    for (const item of items) {
-      await insertItem(db, item)
+      if (found === null) {
+        item = await insertItem(db, item)
+      } else {
+        item = found
+      }
+
+      if (item.description === '') {
+        const itemDescription = await fetchOneBazos(item.url)
+        item = {
+          ...item,
+          description: itemDescription.description,
+        }
+
+        await updateItem(db, item)
+      }
+
+      allItems.push(item)
     }
 
-    return ctx.render(items)
+    return ctx.render(allItems)
   }
 }
 
-export default function Refresh(props: PageProps<Array<Item>>) {
+export default function Refresh({ data }: PageProps<Array<Item>>) {
   return (
     <>
       <Head>
@@ -29,7 +47,7 @@ export default function Refresh(props: PageProps<Array<Item>>) {
       <Menu></Menu>
 
       <div class="p-4 mx-auto max-w-screen-md">
-        asd
+        fetched {data.length} items
       </div>
     </>
   )
