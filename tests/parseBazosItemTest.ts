@@ -9,6 +9,7 @@ function createEmptyItem(): Item {
     url: '',
     site: '',
     description: '',
+    price: null,
     is_active: true,
     is_parsed: false,
     is_checked: false,

@@ -4,6 +4,7 @@ export interface Item {
   url: string
   site: string
   description: string
+  price: number|null
   is_active: boolean
   is_parsed: boolean	
   is_checked:	boolean	

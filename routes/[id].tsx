@@ -21,7 +21,6 @@ export const handler: Handlers<Item> = {
   }
 }
 
-
 export default function Greet(props: PageProps<Item>) {
   return (
     <>
@@ -30,7 +29,11 @@ export default function Greet(props: PageProps<Item>) {
       </Head>
       <Menu></Menu>
       <div class="p-4 mx-auto max-w-screen-md">
-        <h1>{props.data.title}</h1>
+        <h1>
+          <a href={'https://auto.bazos.cz' + props.data.url} target="_blank" class="text-blue-600 cursor-pointer">
+            {props.data.title}
+          </a>
+        </h1>
         <img src={props.data.main_image} alt="" />
         <p>{props.data.description}</p>
         <pre class="mt-5">{JSON.stringify({...props.data, description: '...'}, null, 2)}</pre>

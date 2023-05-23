@@ -26,6 +26,7 @@ export async function fetchAllBazos(): Promise<Array<Item>>{
           url: url,
           site: 'bazos',
           description: '',
+          price: null,
           is_active: true,
           is_parsed: false,
           is_checked: false,
@@ -53,6 +54,14 @@ export async function fetchOneBazos(url: string): Promise<Item> {
   }
 
   const description = doc.querySelector('.popisdetail')?.textContent ?? ''
+  const rawPrice = doc.querySelector('.listadvlevo tr:last-child td:last-child')?.innerText?.trim() ?? null
+  let price = null
+
+  if (rawPrice !== null) {
+    if (rawPrice.match(/Kč/i)) {
+      price = parseInt(rawPrice.replace(' ', ''))
+    }
+  }
 
   return {
     id: null,
@@ -60,6 +69,7 @@ export async function fetchOneBazos(url: string): Promise<Item> {
     url: url,
     site: 'bazos',
     description: description,
+    price: price,
     is_active: true,
     is_parsed: false,
     is_checked: false,

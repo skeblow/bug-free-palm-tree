@@ -29,9 +29,11 @@ export const handler: Handlers<Array<Item>> = {
       }
 
       if (item.description === '') {
+        const fetchedItem = await fetchOneBazos(item.url)
         item = {
           ...item,
-          description: (await fetchOneBazos(item.url)).description,
+          description: fetchedItem.description,
+          price: fetchedItem.price,
         }
       }
 

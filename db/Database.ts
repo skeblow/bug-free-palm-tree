@@ -46,6 +46,7 @@ export class Database {
         url varchar(1024) NOT NULL,
         site varchar(64) NOT NULL,
         description text NOT NULL,
+        price int NULL,
         is_active tinyint(1) NOT NULL,
         main_image varchar(1024) NOT NULL,
         is_parsed tinyint(1) NOT NULL,
