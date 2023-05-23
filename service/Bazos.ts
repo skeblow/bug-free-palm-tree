@@ -74,19 +74,70 @@ export async function fetchOneBazos(url: string): Promise<Item> {
   }
 }
 
-export function parseBazosItem(item: Item): Item {
-  const matches = item.description.match(/(\d+)tkm/)
-
-  let mileage
-
-  if (matches && matches[1]) {
-    mileage = parseInt(matches[1]) * 1000
-  } else {
-    mileage = item.mileage
-  }
-
+export function parseBazosItem (item: Item): Item {
   return {
     ...item,
-    mileage: mileage,
+    year: parseYear(item.description) ?? item.year,
+    mileage: parseMileage(item.description) ?? item.mileage,
+    power: parsePower(item.description) ?? item.power,
+    is_automat: parseIsAutomat(item.description) ?? item.is_automat,
   }
+}
+
+function parseYear (text: string): number|null {
+  let matches = text.match(/r.v. (\d{4})/i)
+
+  if (matches && matches[1]) {
+    return parseInt(matches[1])
+  }
+
+  return null
+}
+
+function parseMileage (text: string): number|null {
+  let matches = text.match(/(\d+) ?(tkm|tisíc km)/i)
+
+  if (matches && matches[1]) {
+    return parseInt(matches[1]) * 1000
+  }
+
+  matches = text.match(/najeto ([\d ]{6,})/i)
+
+  if (matches && matches[1]) {
+    return parseInt(matches[1].replace(' ', ''))
+  }
+
+  matches = text.match(/najeto \w+? ?(\d+)/i)
+
+  if (matches && matches[1]) {
+    return parseInt(matches[1])
+  }
+
+  return null
+}
+
+function parsePower (text: string): number|null {
+  let matches = text.match(/(\d+) ?kw/i)
+
+  if (matches && matches[1]) {
+    return parseInt(matches[1])
+  }
+
+  return null
+}
+
+function parseIsAutomat (text: string): boolean|null {
+  let matches = text.match(/Manuální převodovka/i)
+
+  if (matches) {
+    return false
+  }
+
+  matches = text.match(/Automatická převodovka/i)
+
+  if (matches) {
+    return true
+  }
+
+  return null
 }

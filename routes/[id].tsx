@@ -4,15 +4,18 @@ import { Menu } from "../components/Menu.tsx";
 import { Item } from "../components/model/Item.ts";
 import { selectItemById } from "../db/queries/Item.ts";
 import { Database } from "../db/Database.ts";
+import { parseBazosItem } from "../service/Bazos.ts";
 
 export const handler: Handlers<Item> = {
   async GET(_, ctx) {
     const db = await new Database().init()
-    const item = await selectItemById(db, parseInt(ctx.params.id))
+    let item = await selectItemById(db, parseInt(ctx.params.id))
     
     if (item === null) {
       throw new Error('Item ' + ctx.params.id + ' not found!')
     }
+
+    item = parseBazosItem(item)
 
     return ctx.render(item)
   }
