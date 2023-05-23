@@ -75,17 +75,19 @@ export async function fetchOneBazos(url: string): Promise<Item> {
 }
 
 export function parseBazosItem (item: Item): Item {
+  const text = item.description + item.title
+
   return {
     ...item,
-    year: parseYear(item.description) ?? item.year,
-    mileage: parseMileage(item.description) ?? item.mileage,
-    power: parsePower(item.description) ?? item.power,
-    is_automat: parseIsAutomat(item.description) ?? item.is_automat,
+    year: parseYear(text) ?? item.year,
+    mileage: parseMileage(text) ?? item.mileage,
+    power: parsePower(text) ?? item.power,
+    is_automat: parseIsAutomat(text) ?? item.is_automat,
   }
 }
 
 function parseYear (text: string): number|null {
-  let matches = text.match(/r.v. (\d{4})/i)
+  let matches = text.match(/r.v. ?(\d{4})/i)
 
   if (matches && matches[1]) {
     return parseInt(matches[1])
@@ -95,7 +97,7 @@ function parseYear (text: string): number|null {
 }
 
 function parseMileage (text: string): number|null {
-  let matches = text.match(/(\d+) ?(tkm|tisíc km)/i)
+  let matches = text.match(/(\d+) ?(tkm|tisíc km|tis km)/i)
 
   if (matches && matches[1]) {
     return parseInt(matches[1]) * 1000
@@ -127,7 +129,7 @@ function parsePower (text: string): number|null {
 }
 
 function parseIsAutomat (text: string): boolean|null {
-  let matches = text.match(/Manuální převodovka/i)
+  let matches = text.match(/manuál/i)
 
   if (matches) {
     return false
