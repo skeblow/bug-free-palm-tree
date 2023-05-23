@@ -4,16 +4,7 @@ import { Fragment } from "preact"
 import { Menu } from "../components/Menu.tsx"
 import { Database } from "../db/Database.ts"
 import { selectAllItems } from "../db/queries/Item.ts"
-
-interface Item {
-  id: number
-  title: string,
-  url: string,
-  site: string,
-  description: string,
-  is_active: boolean,
-  main_image: string,
-}
+import { Item } from "../components/model/Item.ts"
 
 export const handler: Handlers<Array<Item>> = {
   async GET(_, ctx) {

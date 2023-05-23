@@ -5,5 +5,13 @@ export interface Item {
   site: string
   description: string
   is_active: boolean
-  main_image: string
+  is_parsed:	boolean	
+  is_checked:	boolean	
+  main_image:	string	
+  year: number|null
+  mileage: number|null	
+  model: string|null	
+  generation: string|null	
+  engine: string|null
+  power: number|null	
 }

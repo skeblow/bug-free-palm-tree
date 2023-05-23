@@ -27,7 +27,15 @@ export async function fetchAllBazos(): Promise<Array<Item>>{
           site: 'bazos',
           description: '',
           is_active: true,
+          is_parsed: false,
+          is_checked: false,
           main_image: mainImage,
+          year: null,
+          mileage: null,
+          model: null,
+          generation: null,
+          engine: null,
+          power: null,
         }
       }
     )
@@ -53,6 +61,14 @@ export async function fetchOneBazos(url: string): Promise<Item> {
     site: 'bazos',
     description: description,
     is_active: true,
+    is_parsed: false,
+    is_checked: false,
     main_image: '',
+    year: null,
+    mileage: null,
+    model: null,
+    generation: null,
+    engine: null,
+    power: null,
   }
 }

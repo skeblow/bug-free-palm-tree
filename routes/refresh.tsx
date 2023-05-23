@@ -4,35 +4,43 @@ import { Menu } from "../components/Menu.tsx"
 import { Item } from "../components/model/Item.ts"
 import { Database } from "../db/Database.ts"
 import { fetchAllBazos, fetchOneBazos } from "../service/Bazos.ts"
-import { insertItem, selectItemByUrl, updateItem } from "../db/queries/Item.ts"
+import { deleteInactiveItems, insertItem, selectItemByUrl, updateAllItemsIsActive, updateItem } from "../db/queries/Item.ts"
 
 export const handler: Handlers<Array<Item>> = {
   async GET(_, ctx) {
     const db = await new Database().init()
     const items = await fetchAllBazos()
     const allItems: Array<Item> = []
+    
+    updateAllItemsIsActive(db, false)
 
     for (let item of items) {
-      const found = await selectItemByUrl(db, item.url)
+      const foundItem = await selectItemByUrl(db, item.url)
 
-      if (found === null) {
+      if (foundItem === null) {
         item = await insertItem(db, item)
       } else {
-        item = found
+        item = foundItem
+      }
+
+      item = {
+        ...item,
+        is_active: true,
       }
 
       if (item.description === '') {
-        const itemDescription = await fetchOneBazos(item.url)
         item = {
           ...item,
-          description: itemDescription.description,
+          description: (await fetchOneBazos(item.url)).description,
         }
-
-        await updateItem(db, item)
       }
+
+      await updateItem(db, item)
 
       allItems.push(item)
     }
+
+    deleteInactiveItems(db)
 
     return ctx.render(allItems)
   }

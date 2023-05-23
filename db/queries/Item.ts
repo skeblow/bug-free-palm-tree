@@ -21,13 +21,17 @@ export async function updateAllItemsIsActive(db: Database, isActive: boolean): P
   await db.getClient().query('UPDATE items SET is_active = ?', [isActive ? 1 : 0])
 }
 
+export async function deleteInactiveItems(db: Database): Promise<void> {
+  await db.getClient().query('DELETE FROM items WHERE is_active = 0');
+}
+
 export async function insertItem(db: Database, item: Item): Promise<Item> {
   const result = await db.getClient().query('INSERT INTO items (title, url, site, description, is_active, main_image) VALUES (?, ?, ?, ?, ?, ?)', [
     item.title,
     item.url,
     item.site,
     item.description,
-    item.is_active,
+    item.is_active ? 1 : 0,
     item.main_image,
   ])
 
@@ -43,7 +47,7 @@ export async function updateItem(db: Database, item: Item): Promise<void> {
     item.url,
     item.site,
     item.description,
-    item.is_active,
+    item.is_active ? 1 : 0,
     item.main_image,
     item.id,
   ])

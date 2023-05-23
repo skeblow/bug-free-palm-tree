@@ -47,7 +47,15 @@ export class Database {
         site varchar(64) NOT NULL,
         description text NOT NULL,
         is_active tinyint(1) NOT NULL,
-        main_image varchar(1024) NOT NULL
+        main_image varchar(1024) NOT NULL,
+        is_parsed tinyint(1) NOT NULL,
+        is_checked tinyint(1) NOT NULL,
+        year int NULL,
+        mileage int NULL,
+        model varchar(64) NULL,
+        generation varchar(64) NULL,
+        engine varchar(64) NULL,
+        power int NULL
       )
     `)
   
