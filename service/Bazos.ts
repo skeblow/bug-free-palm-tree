@@ -36,11 +36,11 @@ export async function fetchAllBazos(): Promise<Array<Item>>{
           generation: null,
           engine: null,
           power: null,
+          is_automat: null,
         }
       }
     )
 }
-
 
 export async function fetchOneBazos(url: string): Promise<Item> {
   const response = await fetch('https://auto.bazos.cz' + url)
@@ -70,5 +70,23 @@ export async function fetchOneBazos(url: string): Promise<Item> {
     generation: null,
     engine: null,
     power: null,
+    is_automat: null,
+  }
+}
+
+export function parseBazosItem(item: Item): Item {
+  const matches = item.description.match(/(\d+)tkm/)
+
+  let mileage
+
+  if (matches && matches[1]) {
+    mileage = parseInt(matches[1]) * 1000
+  } else {
+    mileage = item.mileage
+  }
+
+  return {
+    ...item,
+    mileage: mileage,
   }
 }

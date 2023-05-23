@@ -55,7 +55,8 @@ export class Database {
         model varchar(64) NULL,
         generation varchar(64) NULL,
         engine varchar(64) NULL,
-        power int NULL
+        power int NULL,
+        is_automat tinyint(1) NULL
       )
     `)
   

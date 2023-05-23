@@ -5,7 +5,7 @@ export interface Item {
   site: string
   description: string
   is_active: boolean
-  is_parsed:	boolean	
+  is_parsed: boolean	
   is_checked:	boolean	
   main_image:	string	
   year: number|null
@@ -13,5 +13,6 @@ export interface Item {
   model: string|null	
   generation: string|null	
   engine: string|null
-  power: number|null	
+  power: number|null
+  is_automat: boolean|null
 }

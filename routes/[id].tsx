@@ -30,6 +30,7 @@ export default function Greet(props: PageProps<Item>) {
         <h1>{props.data.title}</h1>
         <img src={props.data.main_image} alt="" />
         <p>{props.data.description}</p>
+        <pre class="mt-5">{JSON.stringify({...props.data, description: '...'}, null, 2)}</pre>
       </div>
     </>
   )
