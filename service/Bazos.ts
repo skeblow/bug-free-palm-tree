@@ -108,33 +108,50 @@ function parseEngine (text: string): string|null {
   let matches = text.match(/forester \w?\w? ?(2.[0,5])/i)
 
   if (matches && matches[1]) {
-    return matches[1]
+    return matches[1].replace(',', '.')
   }
 
   matches = text.match(/motor (2.[0,5])/i)
 
   if (matches && matches[1]) {
-    return matches[1]
+    return matches[1].replace(',', '.')
   }
 
   matches = text.match(/benzin (2.[0,5])/i)
 
   if (matches && matches[1]) {
-    return matches[1]
+    return matches[1].replace(',', '.')
   }
 
   return null
 }
 
 function parseModel (text: string): string|null {
-  const matches = text.match(/forester/i)
+  let matches = text.match(/outback/i)
 
-  console.log(matches)
+  if (matches) {
+    return 'outback'
+  }
+
+  matches = text.match(/forester/i)
 
   if (matches) {
     return 'forester'
   }
 
+
+  matches = text.match(/legacy/i)
+
+  if (matches) {
+    return 'legacy'
+  }
+
+  matches = text.match(/impreza/i)
+
+  if (matches) {
+    return 'impreza'
+  }
+1
   return null
 }
 

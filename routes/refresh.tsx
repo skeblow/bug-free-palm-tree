@@ -3,7 +3,7 @@ import { Head } from "$fresh/runtime.ts"
 import { Menu } from "../components/Menu.tsx"
 import { Item } from "../components/model/Item.ts"
 import { Database } from "../db/Database.ts"
-import { fetchAllBazos, fetchOneBazos } from "../service/Bazos.ts"
+import { fetchAllBazos, fetchOneBazos, parseBazosItem } from "../service/Bazos.ts"
 import { deleteInactiveItems, insertItem, selectItemByUrl, updateAllItemsIsActive, updateItem } from "../db/queries/Item.ts"
 
 export const handler: Handlers<Array<Item>> = {
@@ -38,6 +38,10 @@ export const handler: Handlers<Array<Item>> = {
       }
 
       await updateItem(db, item)
+
+      if (item.site === 'bazos') {
+        item = parseBazosItem(db, item)
+      }
 
       allItems.push(item)
     }
