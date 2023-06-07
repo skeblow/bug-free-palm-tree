@@ -40,42 +40,41 @@ export default function Home( {data}: PageProps<IndexProps> ) {
           alt="the fresh logo: a sliced lemon dripping with juice"
         />
 
-        <div class="flex mb-4">
-          <div class="w-1/4">
-            Models:
-            {data.filter.models.map(model => (
-              <Fragment key={model}>
-                <label class="block px-2">
-                  <input type="checkbox" name="model[]" value={model} class="mr-1" />
-                  {model}
-                </label>
-              </Fragment>
-            ))}
-          </div>
-          <div class="w-1/4">
-            Engines:
-            {data.filter.engines.map(engine => (
-              <Fragment key={engine}>
-                <label class="block px-2">
-                  <input type="checkbox" name="engine[]" value={engine} class="mr-1" />
-                  {engine}
-                </label>
-              </Fragment>
-            ))}
-          </div>
-          <div class="w-1/4">
-            Year from:
-            <div>
-              {data.filter.year_from}
+        <form action="/" method="get" class="mb-4">
+          <div class="flex">
+            <div class="w-1/4">
+              Models:
+              {data.filter.models.map(model => (
+                <Fragment key={model}>
+                  <label class="block px-2">
+                    <input type="checkbox" name="model[]" value={model} class="mr-1" />
+                    {model}
+                  </label>
+                </Fragment>
+              ))}
+            </div>
+            <div class="w-1/4">
+              Engines:
+              {data.filter.engines.map(engine => (
+                <Fragment key={engine}>
+                  <label class="block px-2">
+                    <input type="checkbox" name="engine[]" value={engine} class="mr-1" />
+                    {engine}
+                  </label>
+                </Fragment>
+              ))}
+            </div>
+            <div class="w-1/4">
+              Year from:
+              <div>{data.filter.year_from}</div>
+            </div>
+            <div class="w-1/4">
+              Year to:
+              <div>{data.filter.year_to}</div>
             </div>
           </div>
-          <div class="w-1/4">
-          Year to:
-            <div>
-              {data.filter.year_to}
-            </div>
-          </div>
-        </div>
+          <button type="submit" class="bg-blue-500 text-white font-bold py-1 px-2 rounded">Filter</button>
+        </form>
 
         <div class="flex flex-wrap -mx-2">
           {data.items.map(item => (
