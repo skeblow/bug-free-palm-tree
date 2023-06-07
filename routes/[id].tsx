@@ -15,7 +15,7 @@ export const handler: Handlers<Item> = {
       throw new Error('Item ' + ctx.params.id + ' not found!')
     }
 
-    item = parseBazosItem(item)
+    item = parseBazosItem(db, item)
 
     return ctx.render(item)
   }

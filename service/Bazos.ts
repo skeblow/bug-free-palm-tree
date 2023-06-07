@@ -1,5 +1,7 @@
 import { Item } from "../components/model/Item.ts"
 import { DOMParser } from "DOMParser"
+import { Database } from "../db/Database.ts"
+import { updateItem } from "../db/queries/Item.ts"
 
 export async function fetchAllBazos(): Promise<Array<Item>>{
   const url = 'https://auto.bazos.cz/?hledat=subaru+forester+xt&rubriky=auto&hlokalita=&humkreis=25&cenaod=50000&cenado=300000&Submit=Hledat&kitx=ano'
@@ -84,20 +86,60 @@ export async function fetchOneBazos(url: string): Promise<Item> {
   }
 }
 
-export function parseBazosItem (item: Item): Item {
+export function parseBazosItem (db: Database, item: Item): Item {
   const text = item.description + item.title
 
-  return {
+  item = {
     ...item,
     year: parseYear(text) ?? item.year,
     mileage: parseMileage(text) ?? item.mileage,
     power: parsePower(text) ?? item.power,
     is_automat: parseIsAutomat(text) ?? item.is_automat,
+    model: parseModel(text) ?? item.model,
+    engine: parseEngine(text) ?? item.engine,
   }
+
+  updateItem(db, item)
+
+  return item
+}
+
+function parseEngine (text: string): string|null {
+  let matches = text.match(/forester \w?\w? ?(2.[0,5])/i)
+
+  if (matches && matches[1]) {
+    return matches[1]
+  }
+
+  matches = text.match(/motor (2.[0,5])/i)
+
+  if (matches && matches[1]) {
+    return matches[1]
+  }
+
+  matches = text.match(/benzin (2.[0,5])/i)
+
+  if (matches && matches[1]) {
+    return matches[1]
+  }
+
+  return null
+}
+
+function parseModel (text: string): string|null {
+  const matches = text.match(/forester/i)
+
+  console.log(matches)
+
+  if (matches) {
+    return 'forester'
+  }
+
+  return null
 }
 
 function parseYear (text: string): number|null {
-  let matches = text.match(/r.v. ?(\d{4})/i)
+  const matches = text.match(/r.v. ?(\d{4})/i)
 
   if (matches && matches[1]) {
     return parseInt(matches[1])
@@ -129,7 +171,7 @@ function parseMileage (text: string): number|null {
 }
 
 function parsePower (text: string): number|null {
-  let matches = text.match(/(\d+) ?kw/i)
+  const matches = text.match(/(\d+) ?kw/i)
 
   if (matches && matches[1]) {
     return parseInt(matches[1])
