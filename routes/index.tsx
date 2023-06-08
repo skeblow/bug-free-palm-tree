@@ -8,15 +8,25 @@ import { Item } from "../components/model/Item.ts"
 import { ItemFilter } from "../components/model/ItemFilter.ts"
 
 export const handler: Handlers<IndexProps> = {
-  async GET(_, ctx) {
+  async GET(req, ctx) {
     const db = await new Database().init()
 
     const items = await selectAllItems(db)
     const filter = await selectItemFilter(db)
 
+    const url = new URL(req.url)
+
+    const activeFilter: ItemFilter = {
+      models: url.searchParams.getAll('model[]'),
+      engines: url.searchParams.getAll('engine[]'),
+      year_from: parseInt(url.searchParams.get('year_from') ?? '0'),
+      year_to: parseInt(url.searchParams.get('year_to') ?? '0'),
+    }
+
     return ctx.render({
       items,
       filter,
+      activeFilter,
     })
   }
 }
@@ -24,6 +34,7 @@ export const handler: Handlers<IndexProps> = {
 interface IndexProps {
   items: Array<Item>
   filter: ItemFilter
+  activeFilter: ItemFilter
 }
 
 export default function Home( {data}: PageProps<IndexProps> ) {
@@ -46,8 +57,14 @@ export default function Home( {data}: PageProps<IndexProps> ) {
               Models:
               {data.filter.models.map(model => (
                 <Fragment key={model}>
-                  <label class="block px-2">
-                    <input type="checkbox" name="model[]" value={model} class="mr-1" />
+                  <label class="block px-2 cursor-pointer">
+                    <input 
+                      type="checkbox" 
+                      name="model[]" 
+                      value={model}
+                      checked={data.activeFilter.models.includes(model)} 
+                      class="mr-1"
+                    />
                     {model}
                   </label>
                 </Fragment>
@@ -57,8 +74,14 @@ export default function Home( {data}: PageProps<IndexProps> ) {
               Engines:
               {data.filter.engines.map(engine => (
                 <Fragment key={engine}>
-                  <label class="block px-2">
-                    <input type="checkbox" name="engine[]" value={engine} class="mr-1" />
+                  <label class="block px-2 cursor-pointer">
+                    <input 
+                      type="checkbox" 
+                      name="engine[]" 
+                      value={engine}
+                      checked={data.activeFilter.engines.includes(engine)} 
+                      class="mr-1"
+                    />
                     {engine}
                   </label>
                 </Fragment>
@@ -66,11 +89,27 @@ export default function Home( {data}: PageProps<IndexProps> ) {
             </div>
             <div class="w-1/4">
               Year from:
-              <div>{data.filter.year_from}</div>
+              <div>
+                <input 
+                  type="number" 
+                  class="w-1/2 border-solid border-1 rounded p-1"
+                  min={data.filter.year_from} 
+                  value={data.activeFilter.year_from !== 0 ? data.activeFilter.year_from : data.filter.year_from} 
+                  name="year_from" 
+                />
+               </div>
             </div>
             <div class="w-1/4">
               Year to:
-              <div>{data.filter.year_to}</div>
+              <div>
+                <input 
+                  type="number"
+                  class="w-1/2 border-solid border-1 rounded p-1"
+                  min={data.filter.year_to} 
+                  value={data.activeFilter.year_to !== 0 ? data.activeFilter.year_to : data.filter.year_to} 
+                  name="year_to" 
+                />
+              </div>
             </div>
           </div>
           <button type="submit" class="bg-blue-500 text-white font-bold py-1 px-2 rounded">Filter</button>
@@ -78,14 +117,14 @@ export default function Home( {data}: PageProps<IndexProps> ) {
 
         <div class="flex flex-wrap -mx-2">
           {data.items.map(item => (
-              <Fragment key={item.id}>
-                <a class="w-1/4 px-2 pb-2" href={'/' + item.id}>
-                  <div className="p-1 border-solid rounded border-1">
-                    <h2>{item.title}</h2>
-                    <img src={item.main_image} alt="" />
-                  </div>
-                </a>
-              </Fragment>
+            <Fragment key={item.id}>
+              <a class="w-1/4 px-2 pb-2" href={'/' + item.id}>
+                <div className="p-1 border-solid rounded border-1">
+                  <h2>{item.title}</h2>
+                  <img src={item.main_image} alt="" />
+                </div>
+              </a>
+            </Fragment>
           ))}
         </div>
       </div>
