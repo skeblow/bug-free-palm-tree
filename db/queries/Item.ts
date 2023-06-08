@@ -2,8 +2,28 @@ import { Item } from "../../components/model/Item.ts"
 import { Database } from "../Database.ts"
 import { ItemFilter } from "../../components/model/ItemFilter.ts"
 
-export async function selectAllItems (db: Database): Promise<Array<Item>> {
-  return await db.getClient().query('SELECT * FROM items')
+export async function selectAllItems (db: Database, filter: ItemFilter): Promise<Array<Item>> {
+  const conditions = []
+  
+  if (filter.models.length > 0) {
+    const models = filter.models.map(model => `'${model}'`).join(', ')
+
+    conditions.push(`model IN (${models})`)
+  }
+
+  if (filter.engines.length > 0) {
+    const engines = filter.engines.map(engine => `'${engine}'`).join(', ')
+
+    conditions.push(`engine IN (${engines})`)
+  }
+
+  let where = '';
+
+  if (conditions.length > 0) {
+    where = `WHERE ${conditions.join(' AND ')}`
+  }
+
+  return await db.getClient().query(`SELECT * FROM items ${where}`)
 }
 
 export async function selectItemByUrl (db: Database, url: string): Promise<Item|null> {

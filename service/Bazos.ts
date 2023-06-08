@@ -151,7 +151,7 @@ function parseModel (text: string): string|null {
   if (matches) {
     return 'impreza'
   }
-1
+
   return null
 }
 

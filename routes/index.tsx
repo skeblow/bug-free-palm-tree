@@ -11,9 +11,6 @@ export const handler: Handlers<IndexProps> = {
   async GET(req, ctx) {
     const db = await new Database().init()
 
-    const items = await selectAllItems(db)
-    const filter = await selectItemFilter(db)
-
     const url = new URL(req.url)
 
     const activeFilter: ItemFilter = {
@@ -22,6 +19,9 @@ export const handler: Handlers<IndexProps> = {
       year_from: parseInt(url.searchParams.get('year_from') ?? '0'),
       year_to: parseInt(url.searchParams.get('year_to') ?? '0'),
     }
+
+    const filter = await selectItemFilter(db)
+    const items = await selectAllItems(db, activeFilter)
 
     return ctx.render({
       items,
