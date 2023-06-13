@@ -169,6 +169,19 @@ function parseModel (text: string): string|null {
     return 'tribeca'
   }
 
+  matches = text.match(/xv/i)
+
+  if (matches) {
+    return 'crosstrek'
+  }
+
+  matches = text.match(/crosstrek/i)
+
+  if (matches) {
+    return 'crosstrek'
+  }
+
+
   return null
 }
 

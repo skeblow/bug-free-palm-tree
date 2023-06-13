@@ -26,7 +26,7 @@ export async function fetchAllBazar (): Promise<Array<Item>> {
         const isAutomat = el.querySelector('.razeni')?.textContent?.includes('automatická') ?? false
         const engine = String(parseFloat(el.querySelector('.objem')?.textContent?.replace('Objem', '') ?? '0').toFixed(1))
         const power = parseInt(el.querySelector('.vykon')?.textContent?.replace('Výkon', '') ?? '0')
-        const price = parseInt(el.querySelector('.price')?.textContent?.replace(/\s+/, '') ?? '0')
+        const price = parseInt(el.querySelector('.price')?.textContent?.replaceAll(/\s+/g, '') ?? '0')
 
         return {
           id: null,

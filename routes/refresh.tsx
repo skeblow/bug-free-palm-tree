@@ -28,8 +28,6 @@ export const handler: Handlers<Array<Item>> = {
     for (let item of items) {
       const foundItem = await selectItemByUrl(db, item.url)
 
-      console.log(item)
-
       if (foundItem === null) {
         item = await insertItem(db, item)
       } else {
