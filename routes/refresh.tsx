@@ -6,6 +6,7 @@ import { Database } from "../db/Database.ts"
 import { fetchAllBazos, fetchOneBazos, parseBazosItem } from "../service/Bazos.ts"
 import { deleteInactiveItems, insertItem, selectItemByUrl, updateAllItemsIsActive, updateItem } from "../db/queries/Item.ts"
 import { fetchAllAwd, fetchOneAwd } from "../service/Awd.ts"
+import { fetchAllSportovnivozy } from "../service/Sportovnivozy.ts"
 
 export const handler: Handlers<Array<Item>> = {
   async GET(_, ctx) {
@@ -18,6 +19,7 @@ export const handler: Handlers<Array<Item>> = {
 
     items = items.concat(await fetchAllBazos())
     items = items.concat(await fetchAllAwd())
+    items = items.concat(await fetchAllSportovnivozy())
 
     for (let item of items) {
       const foundItem = await selectItemByUrl(db, item.url)

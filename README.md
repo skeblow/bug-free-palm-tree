@@ -10,9 +10,6 @@ deno task start
 
 This will watch the project directory and restart as necessary.
 
-
-
-https://www.sportovnivozy.cz/model-33-164-subaru-ostatni-modely
 https://www.sportovnivozy.cz/model-33-163-subaru-impreza
 https://www.sportovnivozy.cz/model-33-354-subaru-wrx-sti
 
