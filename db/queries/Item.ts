@@ -58,8 +58,8 @@ export async function selectItemFilter (db: Database): Promise<ItemFilter> {
   }
 
   return {
-    models: filter[0].models.split(','),
-    engines: filter[0].engines.split(','),
+    models: filter[0].models?.split(',') ?? [],
+    engines: filter[0].engines?.split(',') ?? [],
     year_from: filter[0].year_from,
     year_to: filter[0].year_to,
   }

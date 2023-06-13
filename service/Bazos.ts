@@ -105,22 +105,16 @@ export function parseBazosItem (db: Database, item: Item): Item {
 }
 
 function parseEngine (text: string): string|null {
-  let matches = text.match(/forester \w?\w? ?(2.[0,5])/i)
+  let matches = text.match(/(forester|motor|outback|benzin) \w?\w? ?([1,2,3].[0,5,6])/i)
 
-  if (matches && matches[1]) {
-    return matches[1].replace(',', '.')
+  if (matches && matches[2]) {
+    return matches[2].replace(',', '.')
   }
 
-  matches = text.match(/motor (2.[0,5])/i)
+  matches = text.match(/2.5T/i)
 
-  if (matches && matches[1]) {
-    return matches[1].replace(',', '.')
-  }
-
-  matches = text.match(/benzin (2.[0,5])/i)
-
-  if (matches && matches[1]) {
-    return matches[1].replace(',', '.')
+  if (matches) {
+    return '2.5'
   }
 
   return null
@@ -139,6 +133,11 @@ function parseModel (text: string): string|null {
     return 'forester'
   }
 
+  matches = text.match(/wrx sti/i)
+
+  if (matches) {
+    return 'impreza'
+  }
 
   matches = text.match(/legacy/i)
 
@@ -150,6 +149,18 @@ function parseModel (text: string): string|null {
 
   if (matches) {
     return 'impreza'
+  }
+
+  matches = text.match(/justy/i)
+
+  if (matches) {
+    return 'justy'
+  }
+
+  matches = text.match(/tribeca/i)
+
+  if (matches) {
+    return 'tribeca'
   }
 
   return null

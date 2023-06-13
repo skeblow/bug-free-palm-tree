@@ -16,9 +16,9 @@ export async function fetchAllAwd (): Promise<Array<Item>> {
   return (Array.from(doc.querySelectorAll('.bazarbox')) as unknown as Array<HTMLElement>)
     .map(
       (el: HTMLElement): Item => {
-        const title = el.querySelector('.heading')?.textContent ?? ''
-        const url = el.querySelector('a')?.getAttribute('href') ?? ''
-        const mainImage = el.querySelector('img')?.getAttribute('src') ?? ''
+        const title = (el.querySelector('.heading')?.textContent ?? '').trim()
+        const url = 'http://awd.cz' + el.querySelector('a')?.getAttribute('href') ?? ''
+        const mainImage = 'http://awd.cz' + el.querySelector('img')?.getAttribute('src') ?? ''
         const price = parseInt(
           (el.querySelector('.description > strong')?.textContent ?? '0').replace(' ', '')
         )

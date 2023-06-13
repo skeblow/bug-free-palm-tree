@@ -16,7 +16,7 @@ export const handler: Handlers<Array<Item>> = {
 
     let items: Array<Item> = []
 
-    // items = items.concat(await fetchAllBazos())
+    items = items.concat(await fetchAllBazos())
     items = items.concat(await fetchAllAwd())
 
     for (let item of items) {
@@ -41,10 +41,10 @@ export const handler: Handlers<Array<Item>> = {
             description: fetchedItem.description,
             price: fetchedItem.price,
           }
-
-          item = parseBazosItem(db, item)
         }
       }
+
+      item = parseBazosItem(db, item)
 
       await updateItem(db, item)
 
