@@ -20,10 +20,10 @@ export async function fetchAllAwd (): Promise<Array<Item>> {
         const url = 'http://awd.cz' + el.querySelector('a')?.getAttribute('href') ?? ''
         const mainImage = 'http://awd.cz' + el.querySelector('img')?.getAttribute('src') ?? ''
         const price = parseInt(
-          (el.querySelector('.description > strong')?.textContent ?? '0').replace(' ', '')
+          (el.querySelector('.description > strong')?.textContent ?? '0').replace(/\s+/, '')
         )
         const mileage = parseInt(
-          (el.querySelector('.description > em')?.textContent ?? '0').replace(' ', '')
+          (el.querySelector('.description > em')?.textContent ?? '0').replace(/\s+/, '')
         )
         const year = parseInt(el.querySelector('.description > small')?.textContent ?? '0')
 

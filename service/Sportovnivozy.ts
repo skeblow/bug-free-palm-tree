@@ -31,12 +31,12 @@ export async function fetchAllSportovnivozy (): Promise<Array<Item>> {
         const yearMileage = data[0].split('/')
 
         year = parseInt(yearMileage[0].trim() ?? 0)
-        mileage = parseInt(yearMileage[1].trim().replace(' ', ''))
+        mileage = parseInt(yearMileage[1].trim().replace(/\s+/, ''))
 
         const enginePower = data[1].split('/')
         
         if (enginePower.length === 2) {
-          engine = parseInt(enginePower[0].trim().replace(' ', ''))
+          engine = parseInt(enginePower[0].trim().replace(/\s+/, ''))
           engine = (engine / 1000).toFixed(1)
   
           power = parseInt(enginePower[1].trim())
@@ -45,7 +45,7 @@ export async function fetchAllSportovnivozy (): Promise<Array<Item>> {
         }
       }
 
-      const price = parseInt(el.querySelectorAll('tr')[2].textContent?.replace(' ', '') ?? '0')
+      const price = parseInt(el.querySelectorAll('tr')[2].textContent?.replace(/\s+/, '') ?? '0')
 
       return {
         id: null,

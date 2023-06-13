@@ -61,7 +61,7 @@ export async function fetchOneBazos(url: string): Promise<Item> {
 
   if (rawPrice !== null) {
     if (rawPrice.match(/Kč/i)) {
-      price = parseInt(rawPrice.replace(' ', ''))
+      price = parseInt(rawPrice.replace(/\s+/, ''))
     }
   }
 
@@ -192,7 +192,7 @@ function parseMileage (text: string): number|null {
   matches = text.match(/najeto ([\d ]{6,})/i)
 
   if (matches && matches[1]) {
-    return parseInt(matches[1].replace(' ', ''))
+    return parseInt(matches[1].replace(/\s+/, ''))
   }
 
   matches = text.match(/najeto \w+? ?(\d+)/i)
