@@ -30,7 +30,7 @@ export default function Greet(props: PageProps<Item>) {
       <Menu></Menu>
       <div class="p-4 mx-auto max-w-screen-md">
         <h1>
-          <a href={'https://auto.bazos.cz' + props.data.url} target="_blank" class="text-blue-600 cursor-pointer">
+          <a href={props.data.url} target="_blank" class="text-blue-600 cursor-pointer">
             {props.data.title}
           </a>
         </h1>

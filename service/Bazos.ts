@@ -19,7 +19,7 @@ export async function fetchAllBazos (): Promise<Array<Item>> {
     .map(
       (el: HTMLElement): Item => {
         const title = el.querySelector('.nadpis')?.textContent ?? ''
-        const url = el.querySelector('.nadpis a')?.getAttribute('href') ?? ''
+        const url = 'https://auto.bazos.cz' + el.querySelector('.nadpis a')?.getAttribute('href') ?? ''
         const mainImage = el.querySelector('.obrazek')?.getAttribute('src') ?? ''
 
         return {
@@ -46,7 +46,7 @@ export async function fetchAllBazos (): Promise<Array<Item>> {
 }
 
 export async function fetchOneBazos(url: string): Promise<Item> {
-  const response = await fetch('https://auto.bazos.cz' + url)
+  const response = await fetch(url)
   const text = await response.text()
   const parser = new DOMParser()
   const doc = parser.parseFromString(text, 'text/html')

@@ -5,7 +5,7 @@ import { Item } from "../components/model/Item.ts"
 import { Database } from "../db/Database.ts"
 import { fetchAllBazos, fetchOneBazos, parseBazosItem } from "../service/Bazos.ts"
 import { deleteInactiveItems, insertItem, selectItemByUrl, updateAllItemsIsActive, updateItem } from "../db/queries/Item.ts"
-import { fetchAllAwd } from "../service/Awd.ts"
+import { fetchAllAwd, fetchOneAwd } from "../service/Awd.ts"
 
 export const handler: Handlers<Array<Item>> = {
   async GET(_, ctx) {
@@ -45,6 +45,17 @@ export const handler: Handlers<Array<Item>> = {
       }
 
       item = parseBazosItem(db, item)
+
+      if (item.site === 'awd' && ! item.is_parsed) {
+        const fetchedItem = await fetchOneAwd(item.url)
+
+        item = {
+          ...item,
+          engine: fetchedItem.engine,
+          power: fetchedItem.power,
+          is_automat: fetchedItem.is_automat,
+        }
+      }
 
       await updateItem(db, item)
 

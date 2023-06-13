@@ -49,3 +49,41 @@ export async function fetchAllAwd (): Promise<Array<Item>> {
       }
     )
 }
+
+export async function fetchOneAwd(url: string): Promise<Item> {
+  const response = await fetch(url)
+  const text = await response.text()
+  const parser = new DOMParser()
+  const doc = parser.parseFromString(text, 'text/html')
+
+  if (doc === null) {
+    throw new Error('Unable to fetch one bazos ' + url + '!')
+  }
+
+  const table = doc.querySelectorAll('.pricelist')[1] as unknown as HTMLElement
+  const tableCols = table.querySelectorAll('.price')
+
+  const engine = String(parseFloat(tableCols[0].textContent?.replace(',', '.') ?? '0').toFixed(1) )
+  const power = parseInt(tableCols[1].textContent ?? '0')
+  const isAutomat = tableCols[3].textContent !== 'manuální'
+
+  return {
+    id: null,
+    title: '',
+    url: url,
+    site: 'awd',
+    description: '',
+    price: 0,
+    is_active: true,
+    is_parsed: false,
+    is_checked: false,
+    main_image: '',
+    year: null,
+    mileage: null,
+    model: null,
+    generation: null,
+    engine: engine,
+    power: power,
+    is_automat: isAutomat,
+  }
+}
