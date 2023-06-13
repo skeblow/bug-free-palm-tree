@@ -133,6 +133,12 @@ function parseModel (text: string): string|null {
     return 'forester'
   }
 
+  matches = text.match(/levorg/i)
+
+  if (matches) {
+    return 'levorg'
+  }
+
   matches = text.match(/wrx sti/i)
 
   if (matches) {

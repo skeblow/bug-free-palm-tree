@@ -7,6 +7,7 @@ import { fetchAllBazos, fetchOneBazos, parseBazosItem } from "../service/Bazos.t
 import { deleteInactiveItems, insertItem, selectItemByUrl, updateAllItemsIsActive, updateItem } from "../db/queries/Item.ts"
 import { fetchAllAwd, fetchOneAwd } from "../service/Awd.ts"
 import { fetchAllSportovnivozy } from "../service/Sportovnivozy.ts"
+import { fetchAllBazar } from "../service/Bazar.ts"
 
 export const handler: Handlers<Array<Item>> = {
   async GET(_, ctx) {
@@ -17,12 +18,15 @@ export const handler: Handlers<Array<Item>> = {
 
     let items: Array<Item> = []
 
-    items = items.concat(await fetchAllBazos())
-    items = items.concat(await fetchAllAwd())
-    items = items.concat(await fetchAllSportovnivozy())
+    // items = items.concat(await fetchAllBazos())
+    // items = items.concat(await fetchAllAwd())
+    // items = items.concat(await fetchAllSportovnivozy())
+    items = items.concat(await fetchAllBazar())
 
     for (let item of items) {
       const foundItem = await selectItemByUrl(db, item.url)
+
+      console.log(item)
 
       if (foundItem === null) {
         item = await insertItem(db, item)
