@@ -11,7 +11,6 @@ deno task start
 This will watch the project directory and restart as necessary.
 
 
-http://awd.cz/autobazar/autobazar
 
 https://www.sportovnivozy.cz/model-33-164-subaru-ostatni-modely
 https://www.sportovnivozy.cz/model-33-163-subaru-impreza

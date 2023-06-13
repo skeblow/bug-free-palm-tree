@@ -5,14 +5,19 @@ import { Item } from "../components/model/Item.ts"
 import { Database } from "../db/Database.ts"
 import { fetchAllBazos, fetchOneBazos, parseBazosItem } from "../service/Bazos.ts"
 import { deleteInactiveItems, insertItem, selectItemByUrl, updateAllItemsIsActive, updateItem } from "../db/queries/Item.ts"
+import { fetchAllAwd } from "../service/Awd.ts"
 
 export const handler: Handlers<Array<Item>> = {
   async GET(_, ctx) {
     const db = await new Database().init()
-    const items = await fetchAllBazos()
     const allItems: Array<Item> = []
     
     updateAllItemsIsActive(db, false)
+
+    let items: Array<Item> = []
+
+    // items = items.concat(await fetchAllBazos())
+    items = items.concat(await fetchAllAwd())
 
     for (let item of items) {
       const foundItem = await selectItemByUrl(db, item.url)
@@ -28,20 +33,20 @@ export const handler: Handlers<Array<Item>> = {
         is_active: true,
       }
 
-      if (item.description === '') {
-        const fetchedItem = await fetchOneBazos(item.url)
-        item = {
-          ...item,
-          description: fetchedItem.description,
-          price: fetchedItem.price,
+      if (item.site === 'bazos') {
+        if (item.description === '') {
+          const fetchedItem = await fetchOneBazos(item.url)
+          item = {
+            ...item,
+            description: fetchedItem.description,
+            price: fetchedItem.price,
+          }
+
+          item = parseBazosItem(db, item)
         }
       }
 
       await updateItem(db, item)
-
-      if (item.site === 'bazos') {
-        item = parseBazosItem(db, item)
-      }
 
       allItems.push(item)
     }

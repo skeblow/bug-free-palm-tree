@@ -3,7 +3,7 @@ import { DOMParser } from "DOMParser"
 import { Database } from "../db/Database.ts"
 import { updateItem } from "../db/queries/Item.ts"
 
-export async function fetchAllBazos(): Promise<Array<Item>>{
+export async function fetchAllBazos (): Promise<Array<Item>> {
   const url = 'https://auto.bazos.cz/?hledat=subaru+forester+xt&rubriky=auto&hlokalita=&humkreis=25&cenaod=50000&cenado=300000&Submit=Hledat&kitx=ano'
 
   const response = await fetch(url)

@@ -74,6 +74,7 @@ export async function deleteInactiveItems (db: Database): Promise<void> {
 }
 
 export async function insertItem (db: Database, item: Item): Promise<Item> {
+  console.log(item)
   const result = await db.getClient().query(
     `INSERT INTO items SET 
       title = ?,
