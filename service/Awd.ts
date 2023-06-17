@@ -1,4 +1,4 @@
-import { Item } from "../components/model/Item.ts";
+import { Item } from "../components/model/Item.ts"
 import { DOMParser } from "DOMParser"
 
 export async function fetchAllAwd (): Promise<Array<Item>> {

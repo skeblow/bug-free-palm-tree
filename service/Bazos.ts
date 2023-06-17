@@ -4,45 +4,55 @@ import { Database } from "../db/Database.ts"
 import { updateItem } from "../db/queries/Item.ts"
 
 export async function fetchAllBazos (): Promise<Array<Item>> {
-  const url = 'https://auto.bazos.cz/?hledat=subaru+forester+xt&rubriky=auto&hlokalita=&humkreis=25&cenaod=50000&cenado=300000&Submit=Hledat&kitx=ano'
+  const urls = [
+    'https://auto.bazos.cz/?hledat=subaru+forester&rubriky=auto&hlokalita=&humkreis=25&cenaod=50000&cenado=300000&Submit=Hledat&kitx=ano',
+    'https://auto.bazos.cz/60/?hledat=subaru+forester&hlokalita=&humkreis=25&cenaod=50000&cenado=300000&order=',
+    'https://auto.bazos.cz/?hledat=subaru+outback&rubriky=auto&hlokalita=&humkreis=25&cenaod=50000&cenado=300000&Submit=Hledat&kitx=ano',
+    'https://auto.bazos.cz/?hledat=subaru+legacy&rubriky=auto&hlokalita=&humkreis=25&cenaod=50000&cenado=300000&Submit=Hledat&kitx=ano'
+  ]
 
-  const response = await fetch(url)
-  const text = await response.text()
-  const parser = new DOMParser()
-  const doc = parser.parseFromString(text, 'text/html')
+  let elements: Array<HTMLElement> = []
 
-  if (doc === null) {
-    return []
+  for (const url of urls) {
+    const response = await fetch(url)
+    const text = await response.text()
+    const parser = new DOMParser()
+    const doc = parser.parseFromString(text, 'text/html')
+
+    if (doc === null) {
+      continue
+    }
+
+    const docElements = Array.from(doc.querySelectorAll('.maincontent .inzeraty')) as unknown as Array<HTMLElement>
+
+    elements = elements.concat(docElements)
   }
 
-  return (Array.from(doc.querySelectorAll('.maincontent .inzeraty')) as unknown as Array<HTMLElement>)
-    .map(
-      (el: HTMLElement): Item => {
-        const title = el.querySelector('.nadpis')?.textContent ?? ''
-        const url = 'https://auto.bazos.cz' + el.querySelector('.nadpis a')?.getAttribute('href') ?? ''
-        const mainImage = el.querySelector('.obrazek')?.getAttribute('src') ?? ''
+  return elements.map((el: HTMLElement): Item => {
+    const title = el.querySelector('.nadpis')?.textContent ?? ''
+    const url = 'https://auto.bazos.cz' + el.querySelector('.nadpis a')?.getAttribute('href') ?? ''
+    const mainImage = el.querySelector('.obrazek')?.getAttribute('src') ?? ''
 
-        return {
-          id: null,
-          title: title,
-          url: url,
-          site: 'bazos',
-          description: '',
-          price: null,
-          is_active: true,
-          is_parsed: false,
-          is_checked: false,
-          main_image: mainImage,
-          year: null,
-          mileage: null,
-          model: null,
-          generation: null,
-          engine: null,
-          power: null,
-          is_automat: null,
-        }
-      }
-    )
+    return {
+      id: null,
+      title: title,
+      url: url,
+      site: 'bazos',
+      description: '',
+      price: null,
+      is_active: true,
+      is_parsed: false,
+      is_checked: false,
+      main_image: mainImage,
+      year: null,
+      mileage: null,
+      model: null,
+      generation: null,
+      engine: null,
+      power: null,
+      is_automat: null,
+    }
+  })
 }
 
 export async function fetchOneBazos(url: string): Promise<Item> {
@@ -105,7 +115,7 @@ export function parseBazosItem (db: Database, item: Item): Item {
 }
 
 function parseEngine (text: string): string|null {
-  let matches = text.match(/(forester|motor|outback|benzin) \w?\w? ?([1,2,3].[0,5,6])/i)
+  let matches = text.match(/(forester|motor|outback|benzin) \w?\w? ?([1,2,3][\.\,][0,5,6])/i)
 
   if (matches && matches[2]) {
     return matches[2].replace(',', '.')

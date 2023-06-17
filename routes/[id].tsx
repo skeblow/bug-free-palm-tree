@@ -1,10 +1,10 @@
 import { Handlers, PageProps } from "$fresh/server.ts"
 import { Head } from "$fresh/runtime.ts"
-import { Menu } from "../components/Menu.tsx";
-import { Item } from "../components/model/Item.ts";
-import { selectItemById } from "../db/queries/Item.ts";
-import { Database } from "../db/Database.ts";
-import { parseBazosItem } from "../service/Bazos.ts";
+import { Menu } from "../components/Menu.tsx"
+import { Item } from "../components/model/Item.ts"
+import { selectItemById, updateItem } from "../db/queries/Item.ts"
+import { Database } from "../db/Database.ts"
+import { parseBazosItem } from "../service/Bazos.ts"
 
 export const handler: Handlers<Item> = {
   async GET(_, ctx) {
@@ -16,6 +16,7 @@ export const handler: Handlers<Item> = {
     }
 
     item = parseBazosItem(db, item)
+    updateItem(db, item)
 
     return ctx.render(item)
   }

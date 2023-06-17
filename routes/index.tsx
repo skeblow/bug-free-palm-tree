@@ -52,7 +52,7 @@ export default function Home( {data}: PageProps<IndexProps> ) {
         />
 
         <form action="/" method="get" class="mb-4">
-          <div class="flex">
+          <div class="flex mb-2">
             <div class="w-1/4">
               Models:
               {data.filter.models.map(model => (
