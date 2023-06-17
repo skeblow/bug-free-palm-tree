@@ -45,7 +45,7 @@ export async function fetchAllSportovnivozy (): Promise<Array<Item>> {
         }
       }
 
-      const price = parseInt(el.querySelectorAll('tr')[2].textContent?.replaceAll(/\s+/g, '') ?? '0')
+      const price = parseInt(el.querySelectorAll('tr')[2].textContent?.replaceAll(/\s+/g, '').replace('NÁŠTIP', '') ?? '0')
 
       return {
         id: null,

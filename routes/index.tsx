@@ -112,7 +112,8 @@ export default function Home( {data}: PageProps<IndexProps> ) {
               </div>
             </div>
           </div>
-          <button type="submit" class="bg-blue-500 text-white font-bold py-1 px-2 rounded">Filter</button>
+          <button type="submit" class="bg-blue-500 text-white font-bold py-1 px-2 rounded mr-2">Filter</button>
+          <a href="/" class="bg-red-500 text-white font-bold py-1 px-2 rounded inline-block">Reset</a>
         </form>
 
         <div class="flex flex-wrap -mx-2">
@@ -122,8 +123,8 @@ export default function Home( {data}: PageProps<IndexProps> ) {
                 <div className="p-1 border-solid rounded border-1">
                   <h2>{item.title}</h2>
                   <img src={item.main_image} alt="" />
-                  <div>{item.price} Kc</div>
-                  <div>{item.mileage} km</div>
+                  <div>{Intl.NumberFormat().format(item.price ?? 0)} Kc</div>
+                  <div>{item.mileage ?? '?'} km</div>
                 </div>
               </a>
             </Fragment>
