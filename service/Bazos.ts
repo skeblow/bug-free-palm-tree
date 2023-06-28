@@ -5,11 +5,13 @@ import { updateItem } from "../db/queries/Item.ts"
 
 export async function fetchAllBazos (): Promise<Array<Item>> {
   const urls = [
-    'https://auto.bazos.cz/?hledat=subaru+forester&rubriky=auto&hlokalita=&humkreis=25&cenaod=50000&cenado=300000&Submit=Hledat&kitx=ano',
-    'https://auto.bazos.cz/60/?hledat=subaru+forester&hlokalita=&humkreis=25&cenaod=50000&cenado=300000&order=',
-    'https://auto.bazos.cz/?hledat=subaru+outback&rubriky=auto&hlokalita=&humkreis=25&cenaod=50000&cenado=300000&Submit=Hledat&kitx=ano',
-    'https://auto.bazos.cz/?hledat=subaru+legacy&rubriky=auto&hlokalita=&humkreis=25&cenaod=50000&cenado=300000&Submit=Hledat&kitx=ano'
+    'https://auto.bazos.cz/?hledat=subaru&hlokalita=&humkreis=25&cenaod=50000&cenado=500000&order=3',
   ]
+
+  for (let i = 1; i <= 20; i++) {
+    const page = i * 20
+    urls.push(`https://auto.bazos.cz/${page}/?hledat=subaru&hlokalita=&humkreis=25&cenaod=50000&cenado=500000&order=3`)
+  }
 
   let elements: Array<HTMLElement> = []
 
@@ -53,6 +55,7 @@ export async function fetchAllBazos (): Promise<Array<Item>> {
       is_automat: null,
     }
   })
+  .filter((item: Item): boolean => item.title.toLocaleLowerCase().includes('subaru'))
 }
 
 export async function fetchOneBazos(url: string): Promise<Item> {
@@ -101,12 +104,12 @@ export function parseBazosItem (db: Database, item: Item): Item {
 
   item = {
     ...item,
-    year: parseYear(text) ?? item.year,
-    mileage: parseMileage(text) ?? item.mileage,
-    power: parsePower(text) ?? item.power,
+    year: parseYear(item.title) ?? parseYear(item.description) ?? item.year,
+    mileage: parseMileage(item.title) ?? parseMileage(item.description) ?? item.mileage,
+    power: parsePower(item.title) ?? parsePower(item.description) ?? item.power,
     is_automat: parseIsAutomat(text) ?? item.is_automat,
-    model: parseModel(text) ?? item.model,
-    engine: parseEngine(text) ?? item.engine,
+    model: parseModel(item.title) ?? parseModel(item.description) ?? item.model,
+    engine: parseEngine(item.title) ?? parseEngine(item.description) ?? item.engine,
   }
 
   updateItem(db, item)
