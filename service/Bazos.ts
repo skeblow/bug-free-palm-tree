@@ -5,12 +5,12 @@ import { updateItem } from "../db/queries/Item.ts"
 
 export async function fetchAllBazos (): Promise<Array<Item>> {
   const urls = [
-    'https://auto.bazos.cz/?hledat=subaru&hlokalita=&humkreis=25&cenaod=50000&cenado=500000&order=3',
+    'https://auto.bazos.cz/?hledat=subaru&hlokalita=&humkreis=25&cenaod=50000&cenado=500000&order=4',
   ]
 
-  for (let i = 1; i <= 20; i++) {
+  for (let i = 1; i <= 22; i++) {
     const page = i * 20
-    urls.push(`https://auto.bazos.cz/${page}/?hledat=subaru&hlokalita=&humkreis=25&cenaod=50000&cenado=500000&order=3`)
+    urls.push(`https://auto.bazos.cz/${page}/?hledat=subaru&hlokalita=&humkreis=25&cenaod=50000&cenado=500000&order=4`)
   }
 
   let elements: Array<HTMLElement> = []
@@ -139,7 +139,8 @@ function parseEngine (text: string): string|null {
     /2.0 (Boxer|l)/i,
     /2.od/i,
     /FB20/i,
-    /DIESEL 2.0D/i
+    /DIESEL 2.0D/i,
+    /2.0i/i,
   ]
 
   const twoAndHalfLiter = [
@@ -148,7 +149,9 @@ function parseEngine (text: string): string|null {
     /2.5 ?i/i,
     /2457cm3/i,
     /2500ccm/i,
-    /2.5litru/i
+    /2.5litru/i,
+    /2,5 xt/i,
+    /2.5xi/i,
   ]
 
   const threeLiter = [

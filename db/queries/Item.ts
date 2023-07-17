@@ -17,13 +17,13 @@ export async function selectAllItems (db: Database, filter: ItemFilter): Promise
     conditions.push(`engine IN (${engines})`)
   }
 
-  if (filter.year_from > 0) {
-    conditions.push(`year >= ${filter.year_from}`)
-  }
+  // if (filter.year_from > 0) {
+  //   conditions.push(`year >= ${filter.year_from}`)
+  // }
 
-  if (filter.year_to > 0) {
-    conditions.push(`year <= ${filter.year_to}`)
-  }
+  // if (filter.year_to > 0) {
+  //   conditions.push(`year <= ${filter.year_to}`)
+  // }
 
   let where = '';
 
