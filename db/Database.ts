@@ -20,44 +20,46 @@ export class Database {
   }
 
   async connect (): Promise<Client> {
-    this.client = await new Client().connect({
+    this.client = new Client({
       hostname: "127.0.0.1",
-      port: 3306,
-      username: "root",
-      password: "toor",
-      // db: "bfpt",
+      port: 5432,
+      user: "postgres",
+      password: "postgres",
+      database: "bfpt",
     })
+
+    await this.client.connect()
 
     return this.client
   }
 
   async prepareDatabase (): Promise<Client> {
-    await this.getClient().execute(`CREATE DATABASE IF NOT EXISTS bfpt`)
-    await this.getClient().execute(`USE bfpt`)
+    // await this.getClient().queryArray(`CREATE DATABASE IF NOT EXISTS bfpt`)
+    // await this.getClient().execute(`USE bfpt`)
   
     return this.getClient()
   }
 
   async prepareItemsTable(): Promise<Client> {
-    await this.getClient().execute(`
+    await this.getClient().queryArray(`
       CREATE TABLE IF NOT EXISTS items (
-        id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+        id SERIAL PRIMARY KEY,
         title varchar(256) NOT NULL,
         url varchar(1024) NOT NULL,
         site varchar(64) NOT NULL,
         description text NOT NULL,
         price int NULL,
-        is_active tinyint(1) NOT NULL,
+        is_active boolean NOT NULL,
         main_image varchar(1024) NOT NULL,
-        is_parsed tinyint(1) NOT NULL,
-        is_checked tinyint(1) NOT NULL,
+        is_parsed boolean NOT NULL,
+        is_checked boolean NOT NULL,
         year int NULL,
         mileage int NULL,
         model varchar(64) NULL,
         generation varchar(64) NULL,
         engine varchar(64) NULL,
         power int NULL,
-        is_automat tinyint(1) NULL
+        is_automat boolean NULL
       )
     `)
   

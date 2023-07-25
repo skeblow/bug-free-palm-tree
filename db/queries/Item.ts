@@ -31,31 +31,35 @@ export async function selectAllItems (db: Database, filter: ItemFilter): Promise
     where = `WHERE ${conditions.join(' AND ')}`
   }
 
-  return await db.getClient().query(`SELECT * FROM items ${where}`)
+  const result = await db.getClient().queryObject(`SELECT * FROM items ${where}`)
+
+  return result.rows as Array<Item>
 }
 
 export async function selectItemByUrl (db: Database, url: string): Promise<Item|null> {
-  const items = await db.getClient().query('SELECT * FROM items WHERE url = ? LIMIT 1', [url])
+  const result = await db.getClient().queryObject('SELECT * FROM items WHERE url = $URL LIMIT 1', { url })
 
-  return items.length === 1 ? items[0] : null
+  return result.rows.length === 1 ? result.rows[0] as Item : null
 }
 
 export async function selectItemById (db: Database, id: number): Promise<Item|null> {
-  const items = await db.getClient().query('SELECT * FROM items WHERE id = ? LIMIT 1', [id])
+  const result = await db.getClient().queryObject('SELECT * FROM items WHERE id = $ID LIMIT 1', { id })
 
-  return items.length === 1 ? items[0] : null
+  return result.rows.length === 1 ? result.rows[0] as Item : null
 }
 
 export async function selectItemFilter (db: Database): Promise<ItemFilter> {
-  const filter = await db.getClient().query(`
+  const result = await db.getClient().queryArray(`
     SELECT 
-      GROUP_CONCAT(DISTINCT model) AS models,
-      GROUP_CONCAT(DISTINCT engine) AS engines,
+      STRING_AGG(DISTINCT model, ',') AS models,
+      STRING_AGG(DISTINCT engine, ',') AS engines,
       MIN(year) AS year_from,
       MAX(year) AS year_to
     FROM items
   `)
-  
+
+  const filter = result.rows as Array<unknown> as Array<any>
+
   if (filter.length !== 1) {
     return {
       models: [],
@@ -74,101 +78,87 @@ export async function selectItemFilter (db: Database): Promise<ItemFilter> {
 }
 
 export async function updateAllItemsIsActive (db: Database, isActive: boolean): Promise<void> {
-  await db.getClient().query('UPDATE items SET is_active = ?', [isActive ? 1 : 0])
+  await db.getClient().queryObject(`UPDATE items SET is_active = ${isActive}`)
 }
 
 export async function deleteInactiveItems (db: Database): Promise<void> {
-  await db.getClient().query('DELETE FROM items WHERE is_active = 0');
+  await db.getClient().queryObject('DELETE FROM items WHERE is_active = 0');
 }
 
 export async function insertItem (db: Database, item: Item): Promise<Item> {
-  const result = await db.getClient().query(
-    `INSERT INTO items SET 
-      title = ?,
-      url = ?,
-      site = ?,
-      description = ?,
-      price = ?,
-      is_active = ?,
-      is_parsed = ?,
-      is_checked = ?,
-      main_image = ?,
-      year = ?,
-      mileage = ?,
-      model = ?,
-      generation = ?,
-      engine = ?,
-      power = ?,
-      is_automat = ?
-    `, [
-      item.title,
-      item.url,
-      item.site,
-      item.description,
-      item.price,
-      item.is_active ? 1 : 0,
-      item.is_parsed ? 1 : 0,
-      item.is_checked ? 1 : 0,
-      item.main_image,
-      item.year,
-      item.mileage,
-      item.model,
-      item.generation,
-      item.engine,
-      item.power,
-      item.is_automat ? 1 : 0,
-    ]
+  const result = await db.getClient().queryArray(
+    `INSERT INTO items (
+      title,
+      url,
+      site,
+      description,
+      price,
+      is_active,
+      is_parsed,
+      is_checked,
+      main_image,
+      year,
+      mileage,
+      model,
+      generation,
+      engine,
+      power,
+      is_automat
+    ) VALUES (
+      $TITLE,
+      $URL,
+      $SITE,
+      $DESCRIPTION,
+      $PRICE,
+      $IS_ACTIVE,
+      $IS_PARSED,
+      $IS_CHECKED,
+      $MAIN_IMAGE,
+      $YEAR,
+      $MILEAGE,
+      $MODEL,
+      $GENERATION,
+      $ENGINE,
+      $POWER,
+      $IS_AUTOMAT
+    )`, {
+      ...item
+    }
   )
 
   return {
     ...item,
-    id: result.lastInsertId,
+    // id: result.lastInsertId,
   }
 }
 
 export async function updateItem (db: Database, item: Item): Promise<void> {
-  const isParsed = item.price !== null
+  item.is_parsed = item.price !== null
     && item.year !== null
     && item.model !== null
     && item.engine !== null
 
-  await db.getClient().query(
+  await db.getClient().queryArray(
     `UPDATE items SET
-      title = ?,
-      url = ?,
-      site = ?,
-      description = ?,
-      price = ?,
-      is_active = ?,
-      is_parsed = ?,
-      is_checked = ?,
-      main_image = ?,
-      year = ?,
-      mileage = ?,
-      model = ?,
-      generation = ?,
-      engine = ?,
-      power = ?,
-      is_automat = ?
-    WHERE id = ?
-    `, [
-      item.title,
-      item.url,
-      item.site,
-      item.description,
-      item.price,
-      item.is_active ? 1 : 0,
-      isParsed ? 1 : 0,
-      item.is_checked ? 1 : 0,
-      item.main_image,
-      item.year,
-      item.mileage,
-      item.model,
-      item.generation,
-      item.engine,
-      item.power,
-      item.is_automat ? 1 : 0,
-      item.id,
-    ]
+      title = $TITLE,
+      url = $URL,
+      site = $SITE,
+      description = $DESCRIPTION,
+      price = $PRICE,
+      is_active = $IS_ACTIVE,
+      is_parsed = $IS_PARSED,
+      is_checked = $IS_CHECKED,
+      main_image = $MAIN_IMAGE,
+      year = $YEAR,
+      mileage = $MILEAGE,
+      model = $MODEL,
+      generation = $GENERATION,
+      engine = $ENGINE,
+      power = $POWER,
+      is_automat = $IS_AUTOMAT
+    WHERE id = $ID
+    `, {
+      ...item,
+    }
   )
 }
