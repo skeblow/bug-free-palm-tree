@@ -123,8 +123,8 @@ export default function Home( {data}: PageProps<IndexProps> ) {
                 <div className="p-1 border-solid rounded border-1">
                   <h2>{item.title}</h2>
                   <img src={item.main_image} alt="" />
-                  <div>{Intl.NumberFormat().format(item.price ?? 0)} Kc</div>
                   <div>{item.mileage ?? '?'} km</div>
+                  <div>{Intl.NumberFormat().format(item.price ?? 0)} Kc</div>
                 </div>
               </a>
             </Fragment>

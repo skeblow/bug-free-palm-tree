@@ -25,6 +25,10 @@ function parseEngine (text: string): string|null {
     return matches[2].replace(',', '.')
   }
 
+  const oneAndThreeLiter = [
+    /1.3i/i,
+  ]
+
   const oneAndSixLiter = [
     /1.6 (gts|t)/i,
     /1.6i/i,
@@ -33,13 +37,18 @@ function parseEngine (text: string): string|null {
 
   const twoLiter = [
     /2.0 ?x?T/i,
-    /(dvoulitr|2,0) benzín/i,
+    /(dvoulitr|2.0) benzín/i,
     /1 995 cm3/i,
+    /1998 ?ccm/i,
     /2.0 (Boxer|l)/i,
     /2.od/i,
     /FB20/i,
     /DIESEL 2.0D/i,
     /2.0i/i,
+    /2.0d/i,
+    /2.0 r/i,
+    /boxer 2.0/i,
+    /EJ20/i,
   ]
 
   const twoAndHalfLiter = [
@@ -60,6 +69,14 @@ function parseEngine (text: string): string|null {
   const threeAndSixLiter = [
     /3 630 ccm/i
   ]
+
+  for (const pattern of oneAndThreeLiter) {
+    matches = text.match(pattern)
+
+    if (matches) {
+      return '1.3'
+    }
+  }
 
   for (const pattern of oneAndSixLiter) {
     matches = text.match(pattern)
@@ -165,16 +182,28 @@ function parseModel (text: string): string|null {
     return 'crosstrek'
   }
 
+  matches = text.match(/brz/i)
+
+  if (matches) {
+    return 'brz'
+  }
 
   return null
 }
 
 function parseYear (text: string): number|null {
   const patterns = [
-    /r.v. ?(\d{4})/i,
-    /ROK VÝROBY:? \d{0,2}\/?(\d{4})/i,
+    /r.v?.?:? ?(\d{4})/i,
+    /Rok výroby:? \d{0,2}\/?(\d{4})/i,
+    /Rok výroby: (\d{4})/i,
     /rok: \d{2} \/ (\d{4})/i,
     /awd (\d{4})/i,
+    /v provozu od:? \d{2}\/(\d{4})/i,
+    /r.v.(\d{4})/i,
+    /r.v.\d{2}\/(\d{4})/i,
+    /Datum první registrace: \d{1,2}.\d{1,2}.(\d{4})/i,
+    /v provozu od ?\d{0,2}\/?(\d{4})/i,
+    /2.0d (\d{4})/i,
   ]
   let matches
 
@@ -209,7 +238,7 @@ function parseMileage (text: string): number|null {
   }
 
   return null
-}
+}1
 
 function parsePower (text: string): number|null {
   const matches = text.match(/(\d+) ?kw/i)
