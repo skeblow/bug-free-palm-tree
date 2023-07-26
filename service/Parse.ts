@@ -27,7 +27,8 @@ function parseEngine (text: string): string|null {
 
   const oneAndSixLiter = [
     /1.6 (gts|t)/i,
-    /1.6i/i
+    /1.6i/i,
+    /1.6, benz/,
   ]
 
   const twoLiter = [
@@ -169,10 +170,20 @@ function parseModel (text: string): string|null {
 }
 
 function parseYear (text: string): number|null {
-  const matches = text.match(/r.v. ?(\d{4})/i)
+  const patterns = [
+    /r.v. ?(\d{4})/i,
+    /ROK VÝROBY:? \d{0,2}\/?(\d{4})/i,
+    /rok: \d{2} \/ (\d{4})/i,
+    /awd (\d{4})/i,
+  ]
+  let matches
 
-  if (matches && matches[1]) {
-    return parseInt(matches[1])
+  for (const pattern of patterns) {
+    matches = text.match(pattern)
+
+    if (matches && matches[1]) {
+      return parseInt(matches[1])
+    }
   }
 
   return null
