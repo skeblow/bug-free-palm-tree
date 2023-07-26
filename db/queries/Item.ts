@@ -49,7 +49,7 @@ export async function selectItemById (db: Database, id: number): Promise<Item|nu
 }
 
 export async function selectItemFilter (db: Database): Promise<ItemFilter> {
-  const result = await db.getClient().queryArray(`
+  const result = await db.getClient().queryObject(`
     SELECT 
       STRING_AGG(DISTINCT model, ',') AS models,
       STRING_AGG(DISTINCT engine, ',') AS engines,
@@ -82,7 +82,7 @@ export async function updateAllItemsIsActive (db: Database, isActive: boolean): 
 }
 
 export async function deleteInactiveItems (db: Database): Promise<void> {
-  await db.getClient().queryObject('DELETE FROM items WHERE is_active = 0');
+  await db.getClient().queryObject('DELETE FROM items WHERE is_active = false');
 }
 
 export async function insertItem (db: Database, item: Item): Promise<Item> {

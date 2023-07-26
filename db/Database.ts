@@ -13,8 +13,8 @@ export class Database {
 
   async init (): Promise<Database> {
     await this.connect()
-    await this.prepareDatabase()
-    await this.prepareItemsTable()
+    // await this.prepareDatabase()
+    // await this.prepareItemsTable()
 
     return this
   }
