@@ -49,7 +49,7 @@ export async function selectItemById (db: Database, id: number): Promise<Item|nu
 }
 
 export async function selectItemFilter (db: Database): Promise<ItemFilter> {
-  const result = await db.getClient().queryObject(`
+  const result = await db.getClient().queryObject<{models: string, engines: string, year_from: number, year_to: number}>(`
     SELECT 
       STRING_AGG(DISTINCT model, ',') AS models,
       STRING_AGG(DISTINCT engine, ',') AS engines,
@@ -58,7 +58,7 @@ export async function selectItemFilter (db: Database): Promise<ItemFilter> {
     FROM items
   `)
 
-  const filter = result.rows as Array<unknown> as Array<any>
+  const filter = result.rows
 
   if (filter.length !== 1) {
     return {
@@ -86,7 +86,7 @@ export async function deleteInactiveItems (db: Database): Promise<void> {
 }
 
 export async function insertItem (db: Database, item: Item): Promise<Item> {
-  const result = await db.getClient().queryArray(
+  const result = await db.getClient().queryObject<{id: number}>(
     `INSERT INTO items (
       title,
       url,
@@ -121,14 +121,14 @@ export async function insertItem (db: Database, item: Item): Promise<Item> {
       $ENGINE,
       $POWER,
       $IS_AUTOMAT
-    )`, {
+    ) RETURNING id`, {
       ...item
     }
   )
 
   return {
     ...item,
-    // id: result.lastInsertId,
+    id: result.rows[0].id,
   }
 }
 

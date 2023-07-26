@@ -5,12 +5,12 @@ import { updateItem } from "../db/queries/Item.ts"
 
 export async function fetchAllBazos (): Promise<Array<Item>> {
   const urls = [
-    'https://auto.bazos.cz/?hledat=subaru&hlokalita=&humkreis=25&cenaod=50000&cenado=500000&order=4',
+    'https://auto.bazos.cz/?hledat=subaru&hlokalita=&humkreis=25&cenaod=20000&cenado=500000&order=4',
   ]
 
   for (let i = 1; i <= 22; i++) {
     const page = i * 20
-    urls.push(`https://auto.bazos.cz/${page}/?hledat=subaru&hlokalita=&humkreis=25&cenaod=50000&cenado=500000&order=4`)
+    urls.push(`https://auto.bazos.cz/${page}/?hledat=subaru&hlokalita=&humkreis=25&cenaod=20000&cenado=500000&order=4`)
   }
 
   let elements: Array<HTMLElement> = []
