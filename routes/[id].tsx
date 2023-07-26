@@ -4,7 +4,7 @@ import { Menu } from "../components/Menu.tsx"
 import { Item } from "../components/model/Item.ts"
 import { selectItemById, updateItem } from "../db/queries/Item.ts"
 import { Database } from "../db/Database.ts"
-import { parseBazosItem } from "../service/Bazos.ts"
+import { parseItem } from "../service/Parse.ts"
 
 export const handler: Handlers<Item> = {
   async GET(_, ctx) {
@@ -15,7 +15,7 @@ export const handler: Handlers<Item> = {
       throw new Error('Item ' + ctx.params.id + ' not found!')
     }
 
-    item = parseBazosItem(db, item)
+    item = parseItem(item)
     updateItem(db, item)
 
     return ctx.render(item)

@@ -1,6 +1,6 @@
 import { Item } from "../components/model/Item.ts"
 import { assertEquals } from "https://deno.land/std@0.188.0/testing/asserts.ts"
-import { parseBazosItem } from '../service/Bazos.ts'
+import { parseItem } from "../service/Parse.ts"
 
 function createEmptyItem(): Item {
   return {
@@ -31,7 +31,7 @@ Deno.test("bazos forester 1", () => {
   }
 
   assertEquals(
-    parseBazosItem(item),
+    parseItem(item),
     {
       ...item,
       mileage: 225_000,
@@ -47,7 +47,7 @@ Deno.test("bazos forester 2", () => {
   }
 
   assertEquals(
-    parseBazosItem(item),
+    parseItem(item),
     {
       ...item,
       mileage: 360_000,
@@ -63,7 +63,7 @@ Deno.test("bazos forester 3", () => {
   }
 
   assertEquals(
-    parseBazosItem(item),
+    parseItem(item),
     {
       ...item,
       year: 2007,
@@ -81,7 +81,7 @@ Deno.test("bazos forester 4", () => {
   }
 
   assertEquals(
-    parseBazosItem(item),
+    parseItem(item),
     {
       ...item,
       mileage: 250_000,

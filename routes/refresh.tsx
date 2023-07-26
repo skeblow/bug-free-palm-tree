@@ -3,12 +3,13 @@ import { Head } from "$fresh/runtime.ts"
 import { Menu } from "../components/Menu.tsx"
 import { Item } from "../components/model/Item.ts"
 import { Database } from "../db/Database.ts"
-import { fetchAllBazos, fetchOneBazos, parseBazosItem } from "../service/Bazos.ts"
+import { fetchAllBazos, fetchOneBazos } from "../service/Bazos.ts"
 import { deleteInactiveItems, insertItem, selectItemByUrl, updateAllItemsIsActive, updateItem } from "../db/queries/Item.ts"
 import { fetchAllAwd, fetchOneAwd } from "../service/Awd.ts"
 import { fetchAllSportovnivozy } from "../service/Sportovnivozy.ts"
 import { fetchAllBazar } from "../service/Bazar.ts"
 import { fetchAllSauto } from "../service/Sauto.ts"
+import { parseItem } from "../service/Parse.ts"
 
 export const handler: Handlers<Array<Item>> = {
   async GET(_, ctx) {
@@ -50,7 +51,7 @@ export const handler: Handlers<Array<Item>> = {
         }
       }
 
-      item = parseBazosItem(db, item)
+      item = parseItem(item)
 
       if (item.site === 'awd' && ! item.is_parsed) {
         const fetchedItem = await fetchOneAwd(item.url)
