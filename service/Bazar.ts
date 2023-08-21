@@ -19,6 +19,10 @@ export async function fetchAllBazar (): Promise<Array<Item>> {
       continue
     }
 
+    if (doc.getElementById('hptops') !== null) {
+      continue
+    }
+
     const docElements = Array.from(doc.querySelectorAll('.listAds .sale-item')) as unknown as Array<HTMLElement>
 
     elements = elements.concat(docElements)

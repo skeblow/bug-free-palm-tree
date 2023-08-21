@@ -53,7 +53,7 @@ function parseEngine (text: string): string|null {
 
   const twoAndHalfLiter = [
     /2.5 ?T/i,
-    /motor ej25/i,
+    /ej25/i,
     /2.5 ?i/i,
     /2457cm3/i,
     /2500ccm/i,
@@ -192,26 +192,41 @@ function parseModel (text: string): string|null {
 }
 
 function parseYear (text: string): number|null {
-  const patterns = [
-    /r.v?.?:? ?(\d{4})/i,
+  const longYearPatterns = [
+    /r. ?v?.?:? ?(\d{4})/i,
     /Rok výroby:? \d{0,2}\/?(\d{4})/i,
-    /Rok výroby: (\d{4})/i,
+    /Rok výroby:? (\d{4})/i,
     /rok: \d{2} \/ (\d{4})/i,
     /awd (\d{4})/i,
     /v provozu od:? \d{2}\/(\d{4})/i,
     /r.v.(\d{4})/i,
-    /r.v.\d{2}\/(\d{4})/i,
+    /r.v.\d{1,2}\/(\d{4})/i,
     /Datum první registrace: \d{1,2}.\d{1,2}.(\d{4})/i,
     /v provozu od ?\d{0,2}\/?(\d{4})/i,
     /2.0d (\d{4})/i,
+    /kw MY (\d{4})/i,
+    /výroba (\d{4})/i,
+    /vyrobeno (\d{4})/i,
   ]
   let matches
 
-  for (const pattern of patterns) {
+  for (const pattern of longYearPatterns) {
     matches = text.match(pattern)
 
     if (matches && matches[1]) {
       return parseInt(matches[1])
+    }
+  }
+
+  const shortYearPatterns = [
+    /r.v.: \d{2}\/([1,2]\d{1})/i,
+  ]
+
+  for (const pattern of shortYearPatterns) {
+    matches = text.match(pattern)
+
+    if (matches && matches[1]) {
+      return parseInt('20' + matches[1])
     }
   }
 
@@ -251,16 +266,23 @@ function parsePower (text: string): number|null {
 }
 
 function parseIsAutomat (text: string): boolean|null {
+  const autoPatterns = [
+    /Automatická převodovka/i,
+    /cvt/i,
+  ]
+
   let matches = text.match(/manuál/i)
 
   if (matches) {
     return false
   }
 
-  matches = text.match(/Automatická převodovka/i)
+  for (const pattern of autoPatterns) {
+    matches = text.match(pattern)
 
-  if (matches) {
-    return true
+    if (matches) {
+      return true
+    }
   }
 
   return null

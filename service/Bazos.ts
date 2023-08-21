@@ -54,7 +54,7 @@ export async function fetchAllBazos (): Promise<Array<Item>> {
     }
   })
   .filter((item: Item): boolean => item.title.toLocaleLowerCase().includes('subaru'))
-  .filter((item: Item): boolean => ! item.title.toLocaleLowerCase().includes('koupím'))
+  .filter((item: Item): boolean => ! item.title.toLocaleLowerCase().includes('koupím') && ! item.title.toLocaleLowerCase().includes('koupim'))
 }
 
 export async function fetchOneBazos(url: string): Promise<Item> {
