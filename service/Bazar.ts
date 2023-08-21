@@ -19,7 +19,7 @@ export async function fetchAllBazar (): Promise<Array<Item>> {
       continue
     }
 
-    const docElements = Array.from(doc.querySelectorAll('.sale-item')) as unknown as Array<HTMLElement>
+    const docElements = Array.from(doc.querySelectorAll('.listAds .sale-item')) as unknown as Array<HTMLElement>
 
     elements = elements.concat(docElements)
   }
