@@ -193,20 +193,21 @@ function parseModel (text: string): string|null {
 
 function parseYear (text: string): number|null {
   const longYearPatterns = [
-    /r. ?v?.?:? ?(\d{4})/i,
-    /Rok výroby:? \d{0,2}\/?(\d{4})/i,
-    /Rok výroby:? (\d{4})/i,
-    /rok: \d{2} \/ (\d{4})/i,
-    /awd (\d{4})/i,
-    /v provozu od:? \d{2}\/(\d{4})/i,
-    /r.v.(\d{4})/i,
-    /r.v.\d{1,2}\/(\d{4})/i,
-    /Datum první registrace: \d{1,2}.\d{1,2}.(\d{4})/i,
-    /v provozu od ?\d{0,2}\/?(\d{4})/i,
-    /2.0d (\d{4})/i,
-    /kw MY (\d{4})/i,
-    /výroba (\d{4})/i,
-    /vyrobeno (\d{4})/i,
+    /r\. ?v?\.?:? ?(2\d{3})/i,
+    /Rok výroby:? \d{0,2}\/?(2\d{3})/i,
+    /Rok výroby:? (2\d{3})/i,
+    /rok: \d{2} \/ (2\d{3})/i,
+    /awd (2\d{3})/i,
+    /v provozu od:? \d{2}\/(2\d{3})/i,
+    /r\.v\.(2\d{3})/i,
+    /r\.v\.\d{1,2}\/(2\d{3})/i,
+    /registrace: \d{1,2}\.\d{1,2}\.(2\d{3})/i,
+    /v provozu od ?\d{0,2}\/?(2\d{3})/i,
+    /2.0d (2\d{3})/i,
+    /kw MY (2\d{3})/i,
+    /výroba (2\d{3})/i,
+    /vyrobeno (2\d{3})/i,
+    /outback (2\d{3})/i,
   ]
   let matches
 
@@ -219,7 +220,7 @@ function parseYear (text: string): number|null {
   }
 
   const shortYearPatterns = [
-    /r.v.: \d{2}\/([1,2]\d{1})/i,
+    /r\.v\.: \d{2}\/([1,2]\d{1})/i,
   ]
 
   for (const pattern of shortYearPatterns) {
