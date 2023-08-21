@@ -52,8 +52,8 @@ export default function Home( {data}: PageProps<IndexProps> ) {
         />
 
         <form action="/" method="get" class="mb-4">
-          <div class="flex mb-2">
-            <div class="w-1/4">
+          <div class="flex flex-wrap mb-2">
+            <div class="w-1/2 lg:w-1/4">
               Models:
               {data.filter.models.map(model => (
                 <Fragment key={model}>
@@ -70,7 +70,7 @@ export default function Home( {data}: PageProps<IndexProps> ) {
                 </Fragment>
               ))}
             </div>
-            <div class="w-1/4">
+            <div class="w-1/2 lg:w-1/4">
               Engines:
               {data.filter.engines.map(engine => (
                 <Fragment key={engine}>
@@ -87,7 +87,7 @@ export default function Home( {data}: PageProps<IndexProps> ) {
                 </Fragment>
               ))}
             </div>
-            <div class="w-1/4">
+            <div class="w-1/2 lg:w-1/4">
               Year from:
               <div>
                 <input 
@@ -99,7 +99,7 @@ export default function Home( {data}: PageProps<IndexProps> ) {
                 />
                </div>
             </div>
-            <div class="w-1/4">
+            <div class="w-1/2 lg:w-1/4">
               Year to:
               <div>
                 <input 
@@ -119,7 +119,7 @@ export default function Home( {data}: PageProps<IndexProps> ) {
         <div class="flex flex-wrap -mx-2">
           {data.items.map(item => (
             <Fragment key={item.id}>
-              <a class="w-1/4 px-2 pb-2" href={'/' + item.id}>
+              <a class="w-1/2 lg:w-1/4 px-2 pb-2" href={'/' + item.id}>
                 <div className="p-1 border-solid rounded border-1">
                   <h2>{item.title}</h2>
                   <img src={item.main_image} alt="" />
