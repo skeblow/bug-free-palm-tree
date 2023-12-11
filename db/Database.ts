@@ -23,7 +23,7 @@ export class Database {
 
   async connect (): Promise<Client> {
     // this.client = new Client({hostname: "127.0.0.1", port: 5432, user: "postgres", password: "postgres", database: "bfpt"})
-    this.client = new Client('postgresql://postgres:gsB5cA<jV[_fntqS/w3?^u;*=4{QJ:Fz@db.kwjqjzkwostdgwjtjrva.supabase.co:5432/postgres')
+    this.client = new Client('postgresql://postgres:V7Z3mJQjaN8vchP4DrukeSWt9B6MAyLH@db.usuyzwglrhaqplanksgx.supabase.co:5432/postgres')
     await this.client.connect()
 
     return this.client
