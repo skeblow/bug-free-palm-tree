@@ -22,9 +22,9 @@ export const handler: Handlers<Array<Item>> = {
 
     items = items.concat(await fetchAllBazos())
     items = items.concat(await fetchAllAwd())
-    items = items.concat(await fetchAllSportovnivozy())
     items = items.concat(await fetchAllBazar())
     items = items.concat(await fetchAllSauto())
+    items = items.concat(await fetchAllSportovnivozy())
 
     for (let item of items) {
       const foundItem = await selectItemByUrl(db, item.url)
