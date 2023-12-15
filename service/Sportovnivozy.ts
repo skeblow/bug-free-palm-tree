@@ -44,27 +44,12 @@ export async function fetchAllSportovnivozy (): Promise<Array<Item>> {
         }
       }
 
-      const price = parseInt(el.querySelectorAll('tr')[2].textContent?.replaceAll(/\s+/g, '').replace('NÁŠTIP', '') ?? '0')
-
-      console.log({
-        id: null,
-        title: title,
-        url: url,
-        site: 'sportovnivozy',
-        description: '',
-        price: price,
-        is_active: true,
-        is_parsed: false,
-        is_checked: false,
-        main_image: mainImage,
-        year: year,
-        mileage: mileage,
-        model: null,
-        generation: null,
-        engine: engine,
-        power: power,
-        is_automat: null,
-      })
+      let price:number = parseInt(el.querySelectorAll('tr')[2].textContent?.replaceAll(/\s+/g, '').replace('NÁŠTIP', '') ?? '0')
+      
+      if (Number.isNaN(price)) {
+        // cena dohodou
+        price = 0
+      }
 
       return {
         id: null,
