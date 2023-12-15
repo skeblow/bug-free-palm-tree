@@ -5,6 +5,7 @@ import { Item } from "../components/model/Item.ts"
 import { Database } from "../db/Database.ts"
 import { fetchAllBazos, fetchOneBazos } from "../service/Bazos.ts"
 import { deleteInactiveItems, insertItem, selectItemByUrl, updateAllItemsIsActive, updateItem } from "../db/queries/Item.ts"
+import { updateSetting } from '../db/queries/Setting.ts'
 import { fetchAllAwd, fetchOneAwd } from "../service/Awd.ts"
 import { fetchAllSportovnivozy } from "../service/Sportovnivozy.ts"
 import { fetchAllBazar } from "../service/Bazar.ts"
@@ -17,6 +18,13 @@ export const handler: Handlers<Array<Item>> = {
     const allItems: Array<Item> = []
     
     updateAllItemsIsActive(db, false)
+
+    const date = new Date()
+    updateSetting(
+      db,
+      'last_refresh',
+      `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`,
+    )
 
     let items: Array<Item> = []
 

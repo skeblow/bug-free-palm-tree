@@ -13,6 +13,7 @@ export class Database {
 
   async migrate (): Promise<void> {
     await this.prepareItemsTable()
+    await this.prepareSettingsTable()
   }
 
   async init (): Promise<Database> {
@@ -52,6 +53,17 @@ export class Database {
       )
     `)
   
+    return this.getClient()
+  }
+
+  async prepareSettingsTable(): Promise<Client> {
+    await this.getClient().queryArray(`
+      CREATE TABLE IF NOT EXISTS settings (
+        key varchar(64) NOT NULL PRIMARY KEY,
+        value varchar(256) NOT NULL
+      )
+    `)
+
     return this.getClient()
   }
 }
