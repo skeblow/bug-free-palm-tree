@@ -22,10 +22,10 @@ export async function fetchAllSportovnivozy (): Promise<Array<Item>> {
 
       const data: Array<string> = el.querySelectorAll('tr')[1].textContent?.trim().split("\n") ?? []
 
-      let year = null
-      let mileage = null
-      let engine = null
-      let power = null
+      let year:number|null = null
+      let mileage:number|null = null
+      let engine:string|null = null
+      let power:number|null = null
 
       if (data.length === 2) {
         const yearMileage = data[0].split('/')
@@ -36,8 +36,7 @@ export async function fetchAllSportovnivozy (): Promise<Array<Item>> {
         const enginePower = data[1].split('/')
         
         if (enginePower.length === 2) {
-          engine = parseInt(enginePower[0].trim().replace(/\s+/, ''))
-          engine = (engine / 1000).toFixed(1)
+          engine = (parseInt(enginePower[0].trim().replace(/\s+/, '')) / 1000).toFixed(1)
   
           power = parseInt(enginePower[1].trim())
         } else if (enginePower.length === 1) {
@@ -46,6 +45,26 @@ export async function fetchAllSportovnivozy (): Promise<Array<Item>> {
       }
 
       const price = parseInt(el.querySelectorAll('tr')[2].textContent?.replaceAll(/\s+/g, '').replace('NÁŠTIP', '') ?? '0')
+
+      console.log({
+        id: null,
+        title: title,
+        url: url,
+        site: 'sportovnivozy',
+        description: '',
+        price: price,
+        is_active: true,
+        is_parsed: false,
+        is_checked: false,
+        main_image: mainImage,
+        year: year,
+        mileage: mileage,
+        model: null,
+        generation: null,
+        engine: engine,
+        power: power,
+        is_automat: null,
+      })
 
       return {
         id: null,
