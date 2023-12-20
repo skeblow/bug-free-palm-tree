@@ -6,6 +6,7 @@ import { Database } from "../db/Database.ts"
 import { selectAllItems, selectItemFilter } from "../db/queries/Item.ts"
 import { Item } from "../components/model/Item.ts"
 import { ItemFilter } from "../components/model/ItemFilter.ts"
+import { selectSetting } from '../db/queries/Setting.ts'
 
 export const handler: Handlers<IndexProps> = {
   async GET(req, ctx) {
@@ -22,11 +23,13 @@ export const handler: Handlers<IndexProps> = {
 
     const filter = await selectItemFilter(db)
     const items = await selectAllItems(db, activeFilter)
+    const lastUpdate = await selectSetting('last_update')
 
     return ctx.render({
       items,
       filter,
       activeFilter,
+      lastUpdate,
     })
   }
 }
@@ -34,7 +37,8 @@ export const handler: Handlers<IndexProps> = {
 interface IndexProps {
   items: Array<Item>
   filter: ItemFilter
-  activeFilter: ItemFilter
+  activeFilter: ItemFilter,
+  lastUpdate: string,
 }
 
 export default function Home( {data}: PageProps<IndexProps> ) {
@@ -50,6 +54,7 @@ export default function Home( {data}: PageProps<IndexProps> ) {
           class="w-32 h-32"
           alt="the fresh logo: a sliced lemon dripping with juice"
         />
+        <p>Last update: {data.lastUpdate} <a href="/refresh">Update now</a></p>
 
         <form action="/" method="get" class="mb-4">
           <div class="flex flex-wrap mb-2">
