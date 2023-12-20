@@ -23,7 +23,7 @@ export const handler: Handlers<IndexProps> = {
 
     const filter = await selectItemFilter(db)
     const items = await selectAllItems(db, activeFilter)
-    const lastRefresh = await selectSetting('last_refresh')
+    const lastRefresh = await selectSetting(db, 'last_refresh')
 
     return ctx.render({
       items,
