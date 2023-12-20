@@ -31,7 +31,7 @@ export const handler: Handlers<IndexProps> = {
     if (lastRefreshDiff > 60 * 60 * 1_000) {
       // hour ago
       console.log('refresh start')
-      await fetch('/refresh')
+      await fetch('https://quick-mouse-51.deno.dev/refresh')
       console.log('refrehs end')
     }
 
