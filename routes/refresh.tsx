@@ -23,7 +23,7 @@ export const handler: Handlers<Array<Item>> = {
     updateSetting(
       db,
       'last_refresh',
-      `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`,
+      getNowString(),
     )
 
     let items: Array<Item> = []
@@ -81,6 +81,19 @@ export const handler: Handlers<Array<Item>> = {
 
     return ctx.render(allItems)
   }
+}
+
+function getNowString (): string {
+  const date = new Date()
+
+  const year = String(date.getFullYear())
+  const month = (date.getMonth() + 1).toString().padStart(2, '0')
+  const day = date.getDate().toString().padStart(2, '0')
+  const hour = date.getHours().toString().padStart(2, '0')
+  const minute = date.getMinutes().toString().padStart(2, '0')
+  const second = date.getSeconds().toString().padStart(2, '0')
+
+  return `${year}-${month}-${day} ${hour}:${minute}:${second}`
 }
 
 export default function Refresh({ data }: PageProps<Array<Item>>) {
