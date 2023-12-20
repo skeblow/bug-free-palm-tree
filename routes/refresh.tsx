@@ -22,7 +22,7 @@ export const handler: Handlers<Array<Item>> = {
     const date = new Date()
     updateSetting(
       db,
-      'D',
+      'last_refresh',
       getNowString(),
     )
 

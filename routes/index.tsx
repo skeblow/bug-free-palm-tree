@@ -28,11 +28,12 @@ export const handler: Handlers<IndexProps> = {
     // miliseconds
     const lastRefreshDiff = new Date().getTime() - new Date(lastRefresh).getTime()
 
+    // hour ago
     if (lastRefreshDiff > 60 * 60 * 1_000) {
-      // hour ago
       console.log('refresh start')
-      await fetch('https://quick-mouse-51.deno.dev/refresh')
-      console.log('refrehs end')
+      const res = await fetch('https://quick-mouse-51.deno.dev/refresh')
+      console.log(await res.text())
+      console.log('refresh end')
     }
 
     return ctx.render({
