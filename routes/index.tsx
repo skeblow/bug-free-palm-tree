@@ -25,6 +25,16 @@ export const handler: Handlers<IndexProps> = {
     const items = await selectAllItems(db, activeFilter)
     const lastRefresh = await selectSetting(db, 'last_refresh')
 
+    // miliseconds
+    const lastRefreshDiff = new Date().getTime() - new Date(lastRefresh).getTime()
+
+    if (lastRefreshDiff > 60 * 60 * 1_000) {
+      // hour ago
+      console.log('refresh start')
+      await fetch('/refresh')
+      console.log('refrehs end')
+    }
+
     return ctx.render({
       items,
       filter,

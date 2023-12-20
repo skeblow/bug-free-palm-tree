@@ -16,7 +16,7 @@ export const handler: Handlers<Array<Item>> = {
   async GET(_, ctx) {
     const db = await new Database().init()
     const allItems: Array<Item> = []
-    
+
     updateAllItemsIsActive(db, false)
 
     const date = new Date()
