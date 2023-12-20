@@ -7,6 +7,7 @@ import { selectAllItems, selectItemFilter } from "../db/queries/Item.ts"
 import { Item } from "../components/model/Item.ts"
 import { ItemFilter } from "../components/model/ItemFilter.ts"
 import { selectSetting } from '../db/queries/Setting.ts'
+import { refresh} from '../service/Refresh.ts'
 
 export const handler: Handlers<IndexProps> = {
   async GET(req, ctx) {
@@ -31,8 +32,8 @@ export const handler: Handlers<IndexProps> = {
     // hour ago
     if (lastRefreshDiff > 60 * 60 * 1_000) {
       console.log('refresh start')
-      const res = await fetch('https://quick-mouse-51.deno.dev/refresh')
-      console.log(await res.text())
+      const items = await refresh(db)
+      console.log('fetched', items.length)
       console.log('refresh end')
     }
 
