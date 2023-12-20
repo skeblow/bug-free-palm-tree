@@ -23,13 +23,13 @@ export const handler: Handlers<IndexProps> = {
 
     const filter = await selectItemFilter(db)
     const items = await selectAllItems(db, activeFilter)
-    const lastUpdate = await selectSetting('last_update')
+    const lastRefresh = await selectSetting('last_refresh')
 
     return ctx.render({
       items,
       filter,
       activeFilter,
-      lastUpdate,
+      lastRefresh,
     })
   }
 }
@@ -38,7 +38,7 @@ interface IndexProps {
   items: Array<Item>
   filter: ItemFilter
   activeFilter: ItemFilter,
-  lastUpdate: string,
+  lastRefresh: string,
 }
 
 export default function Home( {data}: PageProps<IndexProps> ) {
@@ -54,7 +54,7 @@ export default function Home( {data}: PageProps<IndexProps> ) {
           class="w-32 h-32"
           alt="the fresh logo: a sliced lemon dripping with juice"
         />
-        <p>Last update: {data.lastUpdate} <a href="/refresh">Update now</a></p>
+        <p>Last update: {data.lastRefresh} <a href="/refresh">Update now</a></p>
 
         <form action="/" method="get" class="mb-4">
           <div class="flex flex-wrap mb-2">
