@@ -61,13 +61,11 @@ export default function Home( {data}: PageProps<IndexProps> ) {
       </Head>
       <Menu></Menu>
       <div class="p-4 mx-auto max-w-screen-md">
-        <img
-          src="/logo.svg"
-          class="w-32 h-32"
-          alt="the fresh logo: a sliced lemon dripping with juice"
-        />
-        <p>Last update: {data.lastRefresh} <a href="/refresh">Update now</a></p>
-
+        <p class="mb-3 pb-2 border-b-1">
+          Last update: {data.lastRefresh} 
+          <a href="/refresh" class="ml-2 bg-blue-500 text-white font-bold py-1 px-2 rounded mr-2">Update now</a>
+        </p>
+  
         <form action="/" method="get" class="mb-4">
           <div class="flex flex-wrap mb-2">
             <div class="w-1/2 lg:w-1/4">

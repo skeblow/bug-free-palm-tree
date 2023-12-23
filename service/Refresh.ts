@@ -9,12 +9,11 @@ import { fetchAllBazar } from "../service/Bazar.ts"
 import { fetchAllSauto } from "../service/Sauto.ts"
 import { parseItem } from "../service/Parse.ts"
 
-export async function refresh (db: Database): Array<Item> {
+export async function refresh (db: Database): Promise<Array<Item>> {
   const allItems: Array<Item> = []
 
   updateAllItemsIsActive(db, false)
 
-  const date = new Date()
   updateSetting(
     db,
     'last_refresh',
@@ -73,6 +72,8 @@ export async function refresh (db: Database): Array<Item> {
   }
 
   deleteInactiveItems(db)
+
+  return allItems
 }
 
 function getNowString (): string {
