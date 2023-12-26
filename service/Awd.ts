@@ -51,6 +51,8 @@ export async function fetchAllAwd (): Promise<Array<Item>> {
 }
 
 export async function fetchOneAwd(url: string): Promise<Item> {
+  console.log('fetching awd ', url)
+
   const response = await fetch(url)
   const text = await response.text()
   const parser = new DOMParser()

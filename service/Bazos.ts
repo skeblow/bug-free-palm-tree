@@ -6,7 +6,7 @@ export async function fetchAllBazos (): Promise<Array<Item>> {
     'https://auto.bazos.cz/?hledat=subaru&hlokalita=&humkreis=25&cenaod=20000&cenado=500000&order=4',
   ]
 
-  for (let i = 1; i <= 25; i++) {
+  for (let i = 1; i <= 30; i++) {
     const page = i * 20
     urls.push(`https://auto.bazos.cz/${page}/?hledat=subaru&hlokalita=&humkreis=25&cenaod=20000&cenado=500000&order=4`)
   }
@@ -25,7 +25,9 @@ export async function fetchAllBazos (): Promise<Array<Item>> {
 
     const docElements = Array.from(doc.querySelectorAll('.maincontent .inzeraty')) as unknown as Array<HTMLElement>
 
-    elements = elements.concat(docElements)
+    if (docElements.length === 0) {
+      break
+    }
   }
 
   return elements.map((el: HTMLElement): Item => {
@@ -58,6 +60,8 @@ export async function fetchAllBazos (): Promise<Array<Item>> {
 }
 
 export async function fetchOneBazos(url: string): Promise<Item> {
+  console.log('fetching bazos ', url)
+
   const response = await fetch(url)
   const text = await response.text()
   const parser = new DOMParser()
