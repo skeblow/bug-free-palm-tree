@@ -8,13 +8,17 @@ export async function fetchAllBazos (): Promise<Array<Item>> {
 
   for (let i = 1; i <= 30; i++) {
     const page = i * 20
-    urls.push(`https://auto.bazos.cz/${page}/?hledat=subaru&hlokalita=&humkreis=25&cenaod=20000&cenado=500000&order=4`)
+    // urls.push(`https://auto.bazos.cz/${page}/?hledat=subaru&hlokalita=&humkreis=25&cenaod=20000&cenado=500000&order=4`)
   }
 
   let elements: Array<HTMLElement> = []
 
   for (const url of urls) {
-    const response = await fetch(url)
+    const response = await fetch(url, {
+      headers: {
+        "Cookie": "gal=g"
+      }
+    })
     const text = await response.text()
     const parser = new DOMParser()
     const doc = parser.parseFromString(text, 'text/html')
@@ -23,7 +27,9 @@ export async function fetchAllBazos (): Promise<Array<Item>> {
       continue
     }
 
-    const docElements = Array.from(doc.querySelectorAll('.maincontent .inzeraty')) as unknown as Array<HTMLElement>
+    const docElements = Array.from(doc.querySelectorAll('.gallery .galleryobal')) as unknown as Array<HTMLElement>
+    elements = elements.concat(docElements)
+    console.log('fetch all bazos', docElements.length)
 
     if (docElements.length === 0) {
       break
@@ -31,9 +37,9 @@ export async function fetchAllBazos (): Promise<Array<Item>> {
   }
 
   return elements.map((el: HTMLElement): Item => {
-    const title = el.querySelector('.nadpis')?.textContent ?? ''
-    const url = 'https://auto.bazos.cz' + el.querySelector('.nadpis a')?.getAttribute('href') ?? ''
-    const mainImage = el.querySelector('.obrazek')?.getAttribute('src') ?? ''
+    const title = el.querySelector('.gallerytxt')?.textContent ?? ''
+    const url = 'https://auto.bazos.cz' + el.querySelector('.galleryobrvnejsi a')?.getAttribute('href') ?? ''
+    const mainImage = el.querySelector('.galleryobrazek')?.getAttribute('src') ?? ''
 
     return {
       id: null,
