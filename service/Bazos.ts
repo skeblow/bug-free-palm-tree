@@ -8,7 +8,7 @@ export async function fetchAllBazos (): Promise<Array<Item>> {
 
   for (let i = 1; i <= 30; i++) {
     const page = i * 20
-    // urls.push(`https://auto.bazos.cz/${page}/?hledat=subaru&hlokalita=&humkreis=25&cenaod=20000&cenado=500000&order=4`)
+    urls.push(`https://auto.bazos.cz/${page}/?hledat=subaru&hlokalita=&humkreis=25&cenaod=20000&cenado=500000&order=4`)
   }
 
   let elements: Array<HTMLElement> = []
