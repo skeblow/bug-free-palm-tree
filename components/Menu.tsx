@@ -10,7 +10,7 @@ export function Menu(props: JSX.HTMLAttributes<HTMLUListElement>) {
             alt="the fresh logo: a sliced lemon dripping with juice"
           />
       </li>
-      <li class="px-2"><a href="/">Home</a></li>
+      <li class="px-2"><a href="/">Bug Tree Palm Tree</a></li>
     </ul>
   )
 }

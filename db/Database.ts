@@ -22,9 +22,8 @@ export class Database {
     return this
   }
 
-  async connect (): Promise<Client> {
-    // this.client = new Client({hostname: "127.0.0.1", port: 5432, user: "postgres", password: "postgres", database: "bfpt"})
-    this.client = new Client('postgresql://postgres:V7Z3mJQjaN8vchP4DrukeSWt9B6MAyLH@db.usuyzwglrhaqplanksgx.supabase.co:5432/postgres')
+  async connect (): Promise<object> {
+    this.client = new Client({hostname: Deno.env.get("DB_HOST"), port: 5432, user: "postgres", password: Deno.env.get("DB_PASSWORD"), database: "bfpt"})
     await this.client.connect()
 
     return this.client

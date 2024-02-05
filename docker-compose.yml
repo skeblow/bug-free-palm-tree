@@ -1,26 +1,31 @@
 services:
   bfpt:
     image: denoland/deno
+    container_name: bfpt
     restart: always
     volumes:
       - .:/app
     working_dir: /app
+    environment:
+      - DB_HOST=bfpt-db
+      - DB_PASSWORD=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
     command: deno task start
     ports:
       - 8000:8000
 
-  postgres:
+  bfpt-db:
     image: postgres
     restart: always
+    container_name: bfpt-db
     environment:
       - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_PASSWORD=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
       - POSTGRES_DB=bfpt
     ports:
       - '5432:5432'
 
-  pgadmin:
-    container_name: pgadmin4_container
+  bfpt-pgadmin:
+    container_name: bfpt-pgadmin
     image: dpage/pgadmin4
     restart: always
     environment:
@@ -28,20 +33,3 @@ services:
       PGADMIN_DEFAULT_PASSWORD: root
     ports:
       - "5050:80"
-
-  # mysql:
-  #   image: mariadb
-  #   # NOTE: use of "mysql_native_password" is not recommended: https://dev.mysql.com/doc/refman/8.0/en/upgrading-from-previous-series.html#upgrade-caching-sha2-password
-  #   # (this is just an example, not intended to be a production configuration)
-  #   command: --default-authentication-plugin=mysql_native_password
-  #   restart: always
-  #   environment:
-  #     MARIADB_ROOT_PASSWORD: toor
-  #   ports:
-  #     - 3306:3306
-
-  # adminer:
-  #   image: adminer
-  #   restart: always
-  #   ports:
-  #     - 8001:8080
