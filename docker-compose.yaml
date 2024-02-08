@@ -5,13 +5,14 @@ services:
     restart: always
     volumes:
       - .:/app
+      - deno-cache:/deno-dir
     working_dir: /app
     environment:
       - DB_HOST=bfpt-db
       - DB_PASSWORD=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
     command: deno task start
     ports:
-      - 8000:8000
+      - '8000:8000'
 
   bfpt-db:
     image: postgres
@@ -23,6 +24,8 @@ services:
       - POSTGRES_DB=bfpt
     ports:
       - '5432:5432'
+    volumes:
+      - db-data:/var/lib/postgresql
 
   bfpt-pgadmin:
     container_name: bfpt-pgadmin
@@ -33,3 +36,9 @@ services:
       PGADMIN_DEFAULT_PASSWORD: root
     ports:
       - "5050:80"
+    profiles:
+      - pgadmin
+
+volumes:
+  deno-cache:
+  db-data:
