@@ -18,6 +18,7 @@ services:
 
   bfpt-db:
     image: mariadb
+    container_name: bfpt-db
     environment:
       MYSQL_ROOT_PASSWORD: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
       MYSQL_DATABASE: bfpt
@@ -28,11 +29,14 @@ services:
     ports:
       - "3306:3306"
 
-  adminer:
+  bfpt-adminer:
     image: adminer
+    container_name: bfpt-adminer
     restart: always
     ports:
       - "8080:8080"
+    profiles:
+      - adminer
 
 volumes:
   deno-cache:
