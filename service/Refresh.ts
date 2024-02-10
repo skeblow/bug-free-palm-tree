@@ -22,7 +22,7 @@ export async function refresh (db: Database): Promise<Array<Item>> {
 
   let items: Array<Item> = []
 
-  items = items.concat(await fetchAllBazos())
+  // items = items.concat(await fetchAllBazos())
   items = items.concat(await fetchAllAwd())
   items = items.concat(await fetchAllBazar())
   items = items.concat(await fetchAllSauto())

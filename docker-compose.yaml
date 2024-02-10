@@ -12,7 +12,7 @@ services:
       - DB_PASSWORD=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
     command: deno task start
     ports:
-      - '8000:8000'
+      - "8000:8000"
 
   bfpt-db:
     image: postgres
