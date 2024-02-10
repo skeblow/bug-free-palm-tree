@@ -31,34 +31,32 @@ export async function selectAllItems (db: Database, filter: ItemFilter): Promise
     where = `WHERE ${conditions.join(' AND ')}`
   }
 
-  const result = await db.getClient().queryObject(`SELECT * FROM items ${where}`)
+  const result = await db.getClient().query(`SELECT * FROM items ${where}`)
 
-  return result.rows as Array<Item>
+  return result as Array<Item>
 }
 
 export async function selectItemByUrl (db: Database, url: string): Promise<Item|null> {
-  const result = await db.getClient().queryObject('SELECT * FROM items WHERE url = $URL LIMIT 1', { url })
+  const result = await db.getClient().query('SELECT * FROM items WHERE url = ? LIMIT 1', [ url ])
 
-  return result.rows.length === 1 ? result.rows[0] as Item : null
+  return result.length === 1 ? result[0] as Item : null
 }
 
 export async function selectItemById (db: Database, id: number): Promise<Item|null> {
-  const result = await db.getClient().queryObject('SELECT * FROM items WHERE id = $ID LIMIT 1', { id })
+  const result = await db.getClient().query('SELECT * FROM items WHERE id = ? LIMIT 1', [ id ])
 
-  return result.rows.length === 1 ? result.rows[0] as Item : null
+  return result.length === 1 ? result[0] as Item : null
 }
 
 export async function selectItemFilter (db: Database): Promise<ItemFilter> {
-  const result = await db.getClient().queryObject<{models: string, engines: string, year_from: number, year_to: number}>(`
+  const filter = await db.getClient().query<{models: string, engines: string, year_from: number, year_to: number}>(`
     SELECT 
-      STRING_AGG(DISTINCT model, ',') AS models,
-      STRING_AGG(DISTINCT engine, ',') AS engines,
+      GROUP_CONCAT(DISTINCT model SEPARATOR ',') AS models,
+      GROUP_CONCAT(DISTINCT engine SEPARATOR ',') AS engines,
       MIN(year) AS year_from,
       MAX(year) AS year_to
     FROM items
   `)
-
-  const filter = result.rows
 
   if (filter.length !== 1) {
     return {
@@ -78,15 +76,15 @@ export async function selectItemFilter (db: Database): Promise<ItemFilter> {
 }
 
 export async function updateAllItemsIsActive (db: Database, isActive: boolean): Promise<void> {
-  await db.getClient().queryObject(`UPDATE items SET is_active = ${isActive}`)
+  await db.getClient().query(`UPDATE items SET is_active = ?`, [isActive ? 1 : 0])
 }
 
 export async function deleteInactiveItems (db: Database): Promise<void> {
-  await db.getClient().queryObject('DELETE FROM items WHERE is_active = false');
+  await db.getClient().query('DELETE FROM items WHERE is_active = 0');
 }
 
 export async function insertItem (db: Database, item: Item): Promise<Item> {
-  const result = await db.getClient().queryObject<{id: number}>(
+  const result = await db.getClient().query(
     `INSERT INTO items (
       title,
       url,
@@ -105,30 +103,45 @@ export async function insertItem (db: Database, item: Item): Promise<Item> {
       power,
       is_automat
     ) VALUES (
-      $TITLE,
-      $URL,
-      $SITE,
-      $DESCRIPTION,
-      $PRICE,
-      $IS_ACTIVE,
-      $IS_PARSED,
-      $IS_CHECKED,
-      $MAIN_IMAGE,
-      $YEAR,
-      $MILEAGE,
-      $MODEL,
-      $GENERATION,
-      $ENGINE,
-      $POWER,
-      $IS_AUTOMAT
-    ) RETURNING id`, {
-      ...item
-    }
+      ?,
+      ?,
+      ?,
+      ?,
+      ?,
+      ?,
+      ?,
+      ?,
+      ?,
+      ?,
+      ?,
+      ?,
+      ?,
+      ?,
+      ?,
+      ?
+    ) RETURNING id`, [
+      item.title,
+      item.url,
+      item.site,
+      item.description,
+      item.price,
+      item.is_active ? 1 : 0,
+      item.is_parsed ? 1 : 0,
+      item.is_checked ? 1 : 0,
+      item.main_image,
+      item.year,
+      item.mileage,
+      item.model,
+      item.generation,
+      item.engine,
+      item.power,
+      item.is_automat ? 1 : 0,
+    ]
   )
 
   return {
     ...item,
-    id: result.rows[0].id,
+    id: result[0].id,
   }
 }
 
@@ -138,27 +151,43 @@ export async function updateItem (db: Database, item: Item): Promise<void> {
     && item.model !== null
     && item.engine !== null
 
-  await db.getClient().queryArray(
+  await db.getClient().query(
     `UPDATE items SET
-      title = $TITLE,
-      url = $URL,
-      site = $SITE,
-      description = $DESCRIPTION,
-      price = $PRICE,
-      is_active = $IS_ACTIVE,
-      is_parsed = $IS_PARSED,
-      is_checked = $IS_CHECKED,
-      main_image = $MAIN_IMAGE,
-      year = $YEAR,
-      mileage = $MILEAGE,
-      model = $MODEL,
-      generation = $GENERATION,
-      engine = $ENGINE,
-      power = $POWER,
-      is_automat = $IS_AUTOMAT
-    WHERE id = $ID
-    `, {
-      ...item,
-    }
+      title = ?,
+      url = ?,
+      site = ?,
+      description = ?,
+      price = ?,
+      is_active = ?,
+      is_parsed = ?,
+      is_checked = ?,
+      main_image = ?,
+      year = ?,
+      mileage = ?,
+      model = ?,
+      generation = ?,
+      engine = ?,
+      power = ?,
+      is_automat = ?
+    WHERE id = ?
+    `, [
+      item.title,
+      item.url,
+      item.site,
+      item.description,
+      item.price,
+      item.is_active ? 1 : 0,
+      item.is_parsed ? 1 : 0,
+      item.is_checked ? 1 : 0,
+      item.main_image,
+      item.year,
+      item.mileage,
+      item.model,
+      item.generation,
+      item.engine,
+      item.power,
+      item.is_automat ? 1 : 0,
+      item.id,
+    ]
   )
 }

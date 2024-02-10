@@ -8,7 +8,7 @@
     "@preact/signals-core": "https://esm.sh/*@preact/signals-core@1.2.3",
     "twind": "https://esm.sh/twind@0.16.19",
     "twind/": "https://esm.sh/twind@0.16.19/",
-    "client": "https://deno.land/x/postgres@v0.17.0/mod.ts",
+    "client": "https://deno.land/x/mysql/mod.ts",
     "DOMParser": "https://deno.land/x/deno_dom@v0.1.38/deno-dom-wasm.ts"
   }
 }

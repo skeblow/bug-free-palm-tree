@@ -10,34 +10,29 @@ services:
     environment:
       - DB_HOST=bfpt-db
       - DB_PASSWORD=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+    depends_on:
+      - bfpt-db
     command: deno task start
     ports:
       - "8000:8000"
 
   bfpt-db:
-    image: postgres
-    restart: always
-    container_name: bfpt-db
+    image: mariadb
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
-      - POSTGRES_DB=bfpt
-    ports:
-      - '5432:5432'
+      MYSQL_ROOT_PASSWORD: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+      MYSQL_DATABASE: bfpt
+      MYSQL_USER: bfpt
+      MYSQL_PASSWORD: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
     volumes:
-      - db-data:/var/lib/postgresql 
-
-  bfpt-pgadmin:
-    container_name: bfpt-pgadmin
-    image: dpage/pgadmin4
-    restart: always
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@admin.com
-      PGADMIN_DEFAULT_PASSWORD: root
+      - db-data:/var/lib/mysql
     ports:
-      - "5050:80"
-    profiles:
-      - pgadmin
+      - "3306:3306"
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - "8080:8080"
 
 volumes:
   deno-cache:

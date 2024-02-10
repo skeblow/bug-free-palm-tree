@@ -23,16 +23,21 @@ export class Database {
   }
 
   async connect (): Promise<object> {
-    this.client = new Client({hostname: Deno.env.get("DB_HOST"), port: 5432, user: "postgres", password: Deno.env.get("DB_PASSWORD"), database: "bfpt"})
-    await this.client.connect()
+    this.client = await new Client().connect({
+      hostname: Deno.env.get("DB_HOST"),
+      username: "bfpt",
+      db: "bfpt",
+      port: 3306,
+      password: Deno.env.get("DB_PASSWORD"),
+    })
 
     return this.client
   }
 
   async prepareItemsTable(): Promise<Client> {
-    await this.getClient().queryArray(`
+    await this.getClient().query(`
       CREATE TABLE IF NOT EXISTS items (
-        id SERIAL PRIMARY KEY,
+        id INT NOT NULL AUTO_INCREMENT,
         title varchar(256) NOT NULL,
         url varchar(1024) NOT NULL,
         site varchar(64) NOT NULL,
@@ -48,7 +53,8 @@ export class Database {
         generation varchar(64) NULL,
         engine varchar(64) NULL,
         power int NULL,
-        is_automat boolean NULL
+        is_automat boolean NULL,
+        PRIMARY KEY (id)
       )
     `)
   
@@ -56,10 +62,11 @@ export class Database {
   }
 
   async prepareSettingsTable(): Promise<Client> {
-    await this.getClient().queryArray(`
+    await this.getClient().query(`
       CREATE TABLE IF NOT EXISTS settings (
-        key varchar(64) NOT NULL PRIMARY KEY,
-        value varchar(256) NOT NULL
+        id varchar(64) NOT NULL,
+        value varchar(256) NOT NULL,
+        PRIMARY KEY (id)
       )
     `)
 

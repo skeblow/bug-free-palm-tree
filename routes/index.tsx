@@ -13,17 +13,6 @@ export const handler: Handlers<IndexProps> = {
   async GET(req, ctx) {
     const db = await new Database().init()
 
-    const url = new URL(req.url)
-
-    const activeFilter: ItemFilter = {
-      models: url.searchParams.getAll('model[]'),
-      engines: url.searchParams.getAll('engine[]'),
-      year_from: parseInt(url.searchParams.get('year_from') ?? '0'),
-      year_to: parseInt(url.searchParams.get('year_to') ?? '0'),
-    }
-
-    const filter = await selectItemFilter(db)
-    const items = await selectAllItems(db, activeFilter)
     const lastRefresh = await selectSetting(db, 'last_refresh')
 
     // miliseconds
@@ -36,6 +25,18 @@ export const handler: Handlers<IndexProps> = {
       console.log('fetched', items.length)
       console.log('refresh end')
     }
+
+    const url = new URL(req.url)
+
+    const activeFilter: ItemFilter = {
+      models: url.searchParams.getAll('model[]'),
+      engines: url.searchParams.getAll('engine[]'),
+      year_from: parseInt(url.searchParams.get('year_from') ?? '0'),
+      year_to: parseInt(url.searchParams.get('year_to') ?? '0'),
+    }
+
+    const filter = await selectItemFilter(db)
+    const items = await selectAllItems(db, activeFilter)
 
     return ctx.render({
       items,
