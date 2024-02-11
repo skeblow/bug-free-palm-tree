@@ -34,7 +34,7 @@ services:
     container_name: bfpt-adminer
     restart: always
     ports:
-      - "8080:8080"
+      - "8888:8080"
     profiles:
       - adminer
 

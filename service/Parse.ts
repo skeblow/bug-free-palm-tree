@@ -27,28 +27,44 @@ function parseEngine (text: string): string|null {
 
   const oneAndThreeLiter = [
     /1.3i/i,
+    /1328 cm3/i,
+    /1.3 \d{2}kw/i,
+    /Justy 1.3/i,
+  ]
+
+  const oneAndFiveLiter = [
+    /1 ?498 ?ccm/i,
   ]
 
   const oneAndSixLiter = [
     /1.6 (gts|t)/i,
     /1.6i/i,
+    /1.6t/i,
     /1.6, benz/,
   ]
 
   const twoLiter = [
-    /2.0 ?x?T/i,
+    /2.0 ?x?t/i,
     /(dvoulitr|2.0) benzín/i,
-    /1 995 cm3/i,
-    /1998 ?ccm/i,
+    /1 ?994 ccm/i,
+    /1 ?995 cm3/i,
+    /1 ?998 ?ccm/i,
+    /1 ?988 ?ccm/i,
+    /1998 cm³/i,
     /2.0 (Boxer|l)/i,
     /2.od/i,
     /FB20/i,
     /DIESEL 2.0D/i,
     /2.0i/i,
-    /2.0d/i,
+    /2.0r/i,
+    /2.0 ?d/i,
     /2.0 r/i,
     /boxer 2.0/i,
     /EJ20/i,
+    /motor 2l benzín/i,
+    /motor: 2.0/i,
+    /2.0 ?l/i,
+    /, 2.0 1\d{2}kw/i,
   ]
 
   const twoAndHalfLiter = [
@@ -60,14 +76,18 @@ function parseEngine (text: string): string|null {
     /2.5litru/i,
     /2,5 xt/i,
     /2.5xi/i,
+    /2.5 12\dkw/i,
+    /2.5 ?l/i,
   ]
 
   const threeLiter = [
-    /3.0h6/i
+    /3.0h6/i,
+    /3 ?000 ?ccm/i,
+    /h6 180kw/i,
   ]
 
   const threeAndSixLiter = [
-    /3 630 ccm/i
+    /3 630 ccm/i,
   ]
 
   for (const pattern of oneAndThreeLiter) {
@@ -75,6 +95,14 @@ function parseEngine (text: string): string|null {
 
     if (matches) {
       return '1.3'
+    }
+  }
+
+  for (const pattern of oneAndFiveLiter) {
+    matches = text.match(pattern)
+
+    if (matches) {
+      return '1.5'
     }
   }
 
@@ -122,19 +150,38 @@ function parseEngine (text: string): string|null {
 }
 
 function parseModel (text: string): string|null {
-  let matches = text.match(/outback/i)
+  const outbackPatterns = [
+    /outback/i,
+    /qutback/i,
+  ]
 
-  if (matches) {
-    return 'outback'
+  const foresterPatterns = [
+    /forester/i,
+    /forestr/i,
+  ]
+
+  const imprezaPatterns = [
+    /impreza/i,
+    /impresa/i,
+  ]
+
+  for(const pattern of outbackPatterns) {
+    const matches = text.match(pattern)
+
+    if (matches) {
+      return 'outback'
+    }
   }
 
-  matches = text.match(/forester/i)
+  for(const pattern of foresterPatterns) {
+    const matches = text.match(pattern)
 
-  if (matches) {
-    return 'forester'
+    if (matches) {
+      return 'forester'
+    }
   }
 
-  matches = text.match(/levorg/i)
+  let matches = text.match(/levorg/i)
 
   if (matches) {
     return 'levorg'
@@ -152,10 +199,12 @@ function parseModel (text: string): string|null {
     return 'legacy'
   }
 
-  matches = text.match(/impreza/i)
+  for(const pattern of imprezaPatterns) {
+    const matches = text.match(pattern)
 
-  if (matches) {
-    return 'impreza'
+    if (matches) {
+      return 'impreza'
+    }
   }
 
   matches = text.match(/justy/i)
@@ -194,20 +243,43 @@ function parseModel (text: string): string|null {
 function parseYear (text: string): number|null {
   const longYearPatterns = [
     /r\. ?v?\.?:? ?(2\d{3})/i,
-    /Rok výroby:? \d{0,2}\/?(2\d{3})/i,
-    /Rok výroby:? (2\d{3})/i,
+    /r,v (2\d{3})/i,
+    /rv\. ?(2\d{3})/i,
+    /rv (2\d{3})/i,
+    /rv:? \d{1,2}\/(2\d{3})/i,
+    /r\.v\.(2\d{3})/i,
+    /r\.v\. ?\d{1,2}\/(2\d{3})/i,
+    /r.v : \d{1,2}\/(2\d{3})/i,
+    /rok výroby:? \d{0,2}\/?(2\d{3})/i,
+    /rok výroby:? (2\d{3})/i,
+    /rok výroby \d{1,2} \/(2\d{3})/i,
+    /Rok výroby:\d{1,2}\/(2\d{3})/i,
     /rok: \d{2} \/ (2\d{3})/i,
     /awd (2\d{3})/i,
-    /v provozu od:? \d{2}\/(2\d{3})/i,
-    /r\.v\.(2\d{3})/i,
-    /r\.v\.\d{1,2}\/(2\d{3})/i,
     /registrace: \d{1,2}\.\d{1,2}\.(2\d{3})/i,
+    /datum 1. registrace \d{1,2}\/(2\d{3})/i,
+    /první registrace: \d{1,2}\/(2\d{3})/i,
+    /v provozu od:?\s+\d{2}[\/-]?(2\d{3})/i,
     /v provozu od ?\d{0,2}\/?(2\d{3})/i,
+    /do provozu: \d{1,2}\/(2\d{3})/i,
+    /uvedeno do provozu:? \d{1,2}.\d{1,2}.(2\d{3})/i,
+    /v provozu od:\d{1,2}. \d{1,2}. (2\d{3})/i,
+    /v provozu od:\d{1,2}\/\d{1,2}\/(2\d{3})/i,
     /2.0d (2\d{3})/i,
-    /kw MY (2\d{3})/i,
+    /2,0d rok (2\d{3})/i,
+    /2,0d \d{1,2}\/(2\d{3})/i,
+    /kw my (2\d{3})/i,
     /výroba (2\d{3})/i,
     /vyrobeno (2\d{3})/i,
     /outback (2\d{3})/i,
+    /legacy (2\d{3})/i,
+    /kw, rok \d\/(2\d{3})/i,
+    /kw, 4x4, rok (2\d{3})/i,
+    /kw, \d{1,2}\/(2\d{3})/i,
+    /4x4, \d{1,2}\/(2\d{3})/i,
+    /reg.: \d{1,2}\/(2\d{3})/i,
+    /exclusive\s+- (2\d{3})\/\d{1,2}/i,
+    /subaru z roku (2\d{3})/i,
   ]
   let matches
 
@@ -221,6 +293,7 @@ function parseYear (text: string): number|null {
 
   const shortYearPatterns = [
     /r\.v\.: \d{2}\/([1,2]\d{1})/i,
+    /uvedeni do provozu \d{1,2}\/([1,2]\d{1})/i,
   ]
 
   for (const pattern of shortYearPatterns) {
@@ -254,7 +327,7 @@ function parseMileage (text: string): number|null {
   }
 
   return null
-}1
+}
 
 function parsePower (text: string): number|null {
   const matches = text.match(/(\d+) ?kw/i)
