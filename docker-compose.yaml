@@ -10,8 +10,8 @@ services:
     environment:
       - DB_HOST=bfpt-db
       - DB_PASSWORD=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
-    depends_on:
-      - bfpt-db
+    #depends_on:
+    #  - bfpt-db
     command: deno task start
     ports:
       - "8000:8000"
